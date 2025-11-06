@@ -15,6 +15,59 @@ const ui = {
     }
   },
   
+  // Sistema de notificaciones push
+  showNotification(message, type = 'success', duration = 3000) {
+    // Crear contenedor si no existe
+    let container = this.qs('#notification-container');
+    if (!container) {
+      container = document.createElement('div');
+      container.id = 'notification-container';
+      document.body.appendChild(container);
+    }
+    
+    // Crear notificación
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    
+    const icon = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
+    notification.innerHTML = `
+      <div class="notification-icon">${icon}</div>
+      <div class="notification-message">${message}</div>
+      <button class="notification-close">×</button>
+    `;
+    
+    container.appendChild(notification);
+    
+    // Animación de entrada
+    setTimeout(() => {
+      notification.classList.add('show');
+    }, 10);
+    
+    // Cerrar al hacer clic
+    const closeBtn = notification.querySelector('.notification-close');
+    closeBtn.addEventListener('click', () => {
+      this.removeNotification(notification);
+    });
+    
+    // Auto-cerrar después de la duración
+    if (duration > 0) {
+      setTimeout(() => {
+        this.removeNotification(notification);
+      }, duration);
+    }
+    
+    return notification;
+  },
+  
+  removeNotification(notification) {
+    notification.classList.remove('show');
+    setTimeout(() => {
+      if (notification.parentNode) {
+        notification.parentNode.removeChild(notification);
+      }
+    }, 300);
+  },
+  
   // Update checkout button state based on authentication
   updateCheckoutButton() {
     const checkoutBtn = this.qs('#checkoutBtn');
@@ -814,9 +867,9 @@ function openAccountModal() {
       await auth.login(email, password);
       closeModal();
       updateUserUI();
-      alert('Bienvenido, ' + auth.currentUser.name);
+      ui.showNotification('Bienvenido, ' + auth.currentUser.name, 'success');
     } catch (error) {
-      alert(error.message);
+      ui.showNotification(error.message, 'error');
     }
   });
   
@@ -834,9 +887,9 @@ function openAccountModal() {
       await auth.register(name, email, password);
       closeModal();
       updateUserUI();
-      alert('¡Cuenta creada exitosamente! Bienvenido/a, ' + name);
+      ui.showNotification('¡Cuenta creada exitosamente! Bienvenido/a, ' + name, 'success');
     } catch (error) {
-      alert(error.message);
+      ui.showNotification(error.message, 'error');
     }
   });
   
@@ -887,15 +940,32 @@ function updateUserUI() {
   const adminLink = ui.qs('.admin-link');
   
   if (auth.isLoggedIn()) {
-    if (accountIcon) accountIcon.style.display = 'none';
-    if (profileLink) profileLink.classList.remove('hidden');
+    if (accountIcon) {
+      accountIcon.style.display = 'none';
+      accountIcon.classList.add('hidden');
+    }
+    if (profileLink) {
+      profileLink.classList.remove('hidden');
+      profileLink.style.display = '';
+    }
     if (adminLink && auth.isAdmin()) {
       adminLink.classList.remove('hidden');
+      adminLink.style.display = '';
     }
   } else {
-    if (accountIcon) accountIcon.style.display = 'block';
-    if (profileLink) profileLink.classList.add('hidden');
-    if (adminLink) adminLink.classList.add('hidden');
+    if (accountIcon) {
+      accountIcon.style.display = '';
+      accountIcon.style.placeItems = '';
+      accountIcon.classList.remove('hidden');
+    }
+    if (profileLink) {
+      profileLink.classList.add('hidden');
+      profileLink.style.display = 'none';
+    }
+    if (adminLink) {
+      adminLink.classList.add('hidden');
+      adminLink.style.display = 'none';
+    }
   }
   
   // Actualizar estado del botón de checkout
@@ -2193,10 +2263,8 @@ async function bootAdmin() {
     const logoutBtn = ui.qs('#logoutBtn');
     if (logoutBtn) {
       logoutBtn.addEventListener('click', () => {
-        if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
-          auth.logout();
-          window.location.href = '/';
-        }
+        auth.logout();
+        window.location.href = '/';
       });
     }
     

@@ -317,14 +317,11 @@
       
       // Event listener para logout
       document.getElementById('profileLogoutBtn').addEventListener('click', () => {
-        if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
-          // Limpiar datos de autenticación
-          localStorage.removeItem('super_auth_v1');
-          localStorage.removeItem('currentUserId');
-          alert('Sesión cerrada correctamente');
-          // Redirigir a la página principal
-          window.location.href = '/';
-        }
+        // Limpiar datos de autenticación
+        localStorage.removeItem('super_auth_v1');
+        localStorage.removeItem('currentUserId');
+        // Redirigir a la página principal
+        window.location.href = '/';
       });
       
       // Cargar presupuesto guardado

@@ -282,6 +282,18 @@ body{
   position:relative;
 }
 
+/* Asegurar alineación correcta del icono de cuenta cuando está visible */
+#accountIcon:not([style*="display: none"]) {
+  display: grid !important;
+  place-items: center !important;
+}
+
+/* Asegurar alineación correcta del link de perfil */
+.profile-link {
+  display: grid !important;
+  place-items: center !important;
+}
+
 .icon:hover{
   background:var(--ring);
   color:var(--primary);
@@ -1072,6 +1084,11 @@ input:focus,select:focus,textarea:focus{
   text-align:center;
 }
 
+.modal.login-modal .modal-head .btn{
+  align-self: flex-start;
+  margin-top: -8px;
+}
+
 .modal.login-modal .modal-head h3{
   font-size:24px;
   font-weight:800;
@@ -1118,9 +1135,7 @@ input:focus,select:focus,textarea:focus{
 }
 
 .modal.login-modal .divider{
-  text-align:center;
-  margin:24px 0;
-  position:relative;
+  display: none;
 }
 
 .modal.login-modal .divider::before{
@@ -1160,6 +1175,22 @@ input:focus,select:focus,textarea:focus{
   font-size:18px;
 }
 
+.modal.login-modal .social-btn svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+/* Colores específicos para modo oscuro */
+[data-theme="dark"] .modal.login-modal .social-btn {
+  background: var(--card);
+  border-color: var(--line);
+}
+
+[data-theme="dark"] .modal.login-modal .social-apple svg {
+  fill: var(--text);
+}
+
 .modal.login-modal .social-btn:hover{
   border-color:var(--primary);
   transform:translateY(-2px);
@@ -1180,6 +1211,19 @@ input:focus,select:focus,textarea:focus{
 
 .modal.login-modal .forgot-link a:hover{
   text-decoration:underline;
+}
+
+.modal.login-modal .social-login-text {
+  text-align: center;
+  margin-top: 16px;
+  margin-bottom: 12px;
+}
+
+.modal.login-modal .social-login-text p {
+  color: var(--muted);
+  font-size: 13px;
+  margin: 0;
+  font-weight: 500;
 }
 
 /* Tabs de autenticación */
@@ -1635,6 +1679,18 @@ input:focus,select:focus,textarea:focus{
 /* Modo oscuro para contenedores de inventario */
 [data-theme="dark"] .categories-list{
   background: rgba(255, 255, 255, 0.08);
+}
+
+/* Estilo para bar-percentage en modo oscuro - texto negro */
+[data-theme="dark"] .bar-percentage {
+  color: #000000 !important;
+  background: rgba(255, 255, 255, 0.95);
+}
+
+/* Mantener texto negro en hover en modo oscuro */
+[data-theme="dark"] .category-bar:hover .bar-percentage {
+  color: #000000 !important;
+  background: rgba(255, 255, 255, 0.98);
 }
 
 /* Modo ecológico */
@@ -4191,7 +4247,7 @@ input:focus,select:focus,textarea:focus{
 .checkout-form {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 
 .form-row {
@@ -4207,6 +4263,7 @@ input:focus,select:focus,textarea:focus{
   flex-direction: column;
   gap: 2px;
   margin-bottom: 0;
+  padding-bottom: 0;
 }
 
 .form-group label {
@@ -4233,6 +4290,7 @@ input:focus,select:focus,textarea:focus{
   font-size: 14px;
   transition: border-color 0.2s;
   margin-bottom: 0;
+  padding-bottom: 10px;
 }
 
 .form-group input:focus {
@@ -4404,7 +4462,7 @@ input:focus,select:focus,textarea:focus{
 .payment-options {
   display: flex;
   gap: 16px;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
 }
 
 .payment-option {
@@ -4442,9 +4500,9 @@ input:focus,select:focus,textarea:focus{
 
 .card-form {
   background: var(--bg-secondary);
-  padding: 20px;
+  padding: 20px 20px 10px 20px;
   border-radius: 12px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 /* Reducir espacio sobre "Número de Tarjeta" */
@@ -4679,6 +4737,129 @@ input:focus,select:focus,textarea:focus{
   .address-buttons {
     margin-top: 15px;
     padding-top: 10px;
+  }
+}
+
+/* ===== SISTEMA DE NOTIFICACIONES PUSH ===== */
+#notification-container {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 400px;
+  width: 100%;
+  pointer-events: none;
+  align-items: center;
+}
+
+.notification {
+  background: var(--card);
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  padding: 16px 20px;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  opacity: 0;
+  transform: translateY(-100px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: all;
+  min-width: 300px;
+  max-width: 400px;
+}
+
+.notification.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.notification-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.notification-success .notification-icon {
+  background: #10b981;
+  color: white;
+}
+
+.notification-error .notification-icon {
+  background: #ef4444;
+  color: white;
+}
+
+.notification-info .notification-icon {
+  background: var(--primary);
+  color: white;
+}
+
+.notification-message {
+  flex: 1;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.notification-close {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-size: 20px;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  padding: 0;
+  line-height: 1;
+}
+
+.notification-close:hover {
+  background: var(--line);
+  color: var(--text);
+}
+
+/* Modo oscuro para notificaciones */
+[data-theme="dark"] .notification {
+  background: var(--card);
+  border-color: var(--line);
+}
+
+[data-theme="dark"] .notification-message {
+  color: var(--text);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  #notification-container {
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: calc(100% - 20px);
+    width: calc(100% - 20px);
+  }
+  
+  .notification {
+    min-width: auto;
+    max-width: 100%;
+    width: 100%;
   }
 }
 

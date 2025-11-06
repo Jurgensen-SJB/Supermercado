@@ -332,12 +332,9 @@
     function initializeAdminFeatures() {
       // Event listener para logout
       document.getElementById('logoutBtn')?.addEventListener('click', () => {
-        if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
-          localStorage.removeItem('super_auth_v1');
-          localStorage.removeItem('currentUserId');
-          alert('Sesión cerrada correctamente');
-          window.location.href = '/';
-        }
+        localStorage.removeItem('super_auth_v1');
+        localStorage.removeItem('currentUserId');
+        window.location.href = '/';
       });
       
       // Cargar datos iniciales
