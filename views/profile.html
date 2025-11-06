@@ -312,6 +312,16 @@
       document.getElementById('expensesTab').addEventListener('click', () => showSection('expenses'));
       document.getElementById('adminStatsTab').addEventListener('click', () => showSection('adminStats'));
       
+      // Función de formateo de dinero en COP
+      window.formatMoneyCOP = function(n) {
+        const value = Math.max(0, Math.round(n || 0)); // Asegurar que no sea negativo
+        const formatted = new Intl.NumberFormat('es-CO', { 
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0
+        }).format(value); 
+        return `$${formatted} COP`;
+      };
+      
       // Event listeners para gestor de gastos
       document.getElementById('setBudget').addEventListener('click', setMonthlyBudget);
       
@@ -450,8 +460,8 @@
         // Cargar estadísticas básicas
         const stats = await fetch(`/api/orders/${userId}/stats`).then(r => r.json());
         document.getElementById('totalOrders').textContent = stats.total_orders || 0;
-        document.getElementById('totalSpent').textContent = '$' + (stats.total_spent || 0).toFixed(2);
-        document.getElementById('avgOrder').textContent = '$' + (stats.avg_order_value || 0).toFixed(2);
+        document.getElementById('totalSpent').textContent = formatMoneyCOP(stats.total_spent || 0);
+        document.getElementById('avgOrder').textContent = formatMoneyCOP(stats.avg_order_value || 0);
         document.getElementById('lastOrderDate').textContent = stats.last_order_date ? 
           new Date(stats.last_order_date).toLocaleDateString() : 'Nunca';
         
@@ -482,37 +492,73 @@
             minute: '2-digit'
           });
           
-          // Calcular cantidad de productos
+          // Calcular cantidad de productos usando items reales
           let itemsCount = 0;
           let itemsSummary = '';
           
-          if (order.items_summary) {
-            // Usar el resumen si está disponible
+          if (order.items && Array.isArray(order.items) && order.items.length > 0) {
+            // Usar los items reales de la base de datos
+            itemsCount = order.items.reduce((total, item) => {
+              return total + Math.max(0, item.quantity || 0);
+            }, 0);
+            
+            // Construir resumen desde los items reales con nombres de productos
+            itemsSummary = order.items.map(item => {
+              const productName = item.product_name || `Producto #${item.product_id}`;
+              return `${productName} x${item.quantity}`;
+            }).join(', ');
+          } else if (order.items_summary) {
+            // Fallback: usar el resumen si está disponible
             itemsSummary = order.items_summary;
             // Contar productos del resumen
             itemsCount = (order.items_summary.match(/x\d+/g) || []).reduce((total, match) => {
               return total + parseInt(match.replace('x', ''));
             }, 0);
-          } else if (order.items) {
-            // Parsear JSON si está disponible
-            try {
-              const items = JSON.parse(order.items);
-              itemsCount = items.reduce((total, item) => total + item.quantity, 0);
-              itemsSummary = items.map(item => `${item.name} x${item.quantity}`).join(', ');
-            } catch (e) {
-              itemsCount = 0;
-              itemsSummary = 'Productos no disponibles';
-            }
+          } else {
+            itemsCount = 0;
+            itemsSummary = 'Productos no disponibles';
           }
           
           // Información de pago y entrega
           const paymentMethod = order.payment_method || 'card';
           const deliveryMethod = order.delivery_method || 'standard';
-          const shippingCost = order.shipping_cost || 4.99;
+          const shippingCost = Math.max(0, order.shipping_cost || 0);
           
-          // Calcular subtotal (total - shipping - tax)
-          const tax = (order.total - shippingCost) * 0.08 / 1.08; // Impuesto aproximado
-          const subtotal = order.total - shippingCost - tax;
+          // Calcular subtotal real usando los items guardados en la base de datos
+          let subtotal = 0;
+          if (order.items && Array.isArray(order.items) && order.items.length > 0) {
+            // Usar los precios reales guardados en order_items
+            subtotal = order.items.reduce((sum, item) => {
+              const itemPrice = Math.max(0, item.price || 0);
+              const itemQuantity = Math.max(0, item.quantity || 0);
+              return sum + (itemPrice * itemQuantity);
+            }, 0);
+          } else {
+            // Fallback: calcular desde el total si no hay items disponibles
+            const orderTotal = Math.max(0, order.total || 0);
+            // El total incluye: subtotal + tax + shipping
+            // tax = subtotal * 0.08
+            // total = subtotal + (subtotal * 0.08) + shipping
+            // total = subtotal * 1.08 + shipping
+            // subtotal = (total - shipping) / 1.08
+            subtotal = Math.max(0, (orderTotal - shippingCost) / 1.08);
+          }
+          
+          // Calcular impuesto basado en el subtotal real
+          const tax = Math.max(0, subtotal * 0.08); // 8% de impuesto
+          
+          // El total ya está guardado correctamente en la base de datos
+          const orderTotal = Math.max(0, order.total || 0);
+          
+          // Función de formateo de dinero en COP (asegurar valores no negativos)
+          const formatMoney = (n) => {
+            const value = Math.max(0, Math.round(n || 0)); // Asegurar que no sea negativo
+            const formatted = new Intl.NumberFormat('es-CO', { 
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0
+            }).format(value); 
+            return `$${formatted} COP`;
+          };
           
           // Iconos para métodos de pago y entrega
           const paymentIcon = paymentMethod === 'card' ? '💳' : '💵';
@@ -560,19 +606,19 @@
                 <div class="order-totals">
                   <div class="total-line">
                     <span>Subtotal:</span>
-                    <span>$${subtotal.toFixed(2)}</span>
+                    <span>${formatMoney(subtotal)}</span>
                   </div>
                   <div class="total-line">
                     <span>Envío:</span>
-                    <span>$${shippingCost.toFixed(2)}</span>
+                    <span>${formatMoney(shippingCost)}</span>
                   </div>
                   <div class="total-line">
                     <span>Impuesto:</span>
-                    <span>$${tax.toFixed(2)}</span>
+                    <span>${formatMoney(tax)}</span>
                   </div>
                   <div class="total-line total-final">
                     <span>Total:</span>
-                    <span>$${order.total.toFixed(2)}</span>
+                    <span>${formatMoney(orderTotal)}</span>
                   </div>
                 </div>
               </div>
@@ -596,8 +642,8 @@
         
         // Actualizar estadísticas básicas
         document.getElementById('totalOrdersCount').textContent = stats.total_orders || 0;
-        document.getElementById('totalSpentAmount').textContent = '$' + (stats.total_spent || 0).toFixed(2);
-        document.getElementById('avgOrderValue').textContent = '$' + (stats.avg_order_value || 0).toFixed(2);
+        document.getElementById('totalSpentAmount').textContent = formatMoneyCOP(stats.total_spent || 0);
+        document.getElementById('avgOrderValue').textContent = formatMoneyCOP(stats.avg_order_value || 0);
         document.getElementById('lastOrderDate').textContent = stats.last_order_date ? 
           new Date(stats.last_order_date).toLocaleDateString('es-ES') : 'Nunca';
         
@@ -605,7 +651,7 @@
         const chartContainer = document.getElementById('monthlyChart');
         if (chartContainer) {
           if (stats.monthlyStats && stats.monthlyStats.length > 0) {
-            const maxSpent = Math.max(...stats.monthlyStats.map(m => m.total_spent));
+            const maxSpent = Math.max(...stats.monthlyStats.map(m => Math.max(0, m.total_spent || 0)));
             
             chartContainer.innerHTML = `
               <div class="chart-header">
@@ -622,8 +668,8 @@
                   return `
                     <div class="chart-bar">
                       <div class="bar-container">
-                        <div class="bar" style="height: ${height}%" title="$${month.total_spent.toFixed(2)} en ${monthName} ${year}"></div>
-                        <div class="bar-value-overlay">$${month.total_spent.toFixed(2)}</div>
+                        <div class="bar" style="height: ${height}%" title="${formatMoneyCOP(Math.max(0, month.total_spent || 0))} en ${monthName} ${year}"></div>
+                        <div class="bar-value-overlay">${formatMoneyCOP(Math.max(0, month.total_spent || 0))}</div>
                       </div>
                       <span class="bar-label">${monthName}</span>
                       <span class="bar-year">${year}</span>
@@ -813,12 +859,12 @@
         
         // Actualizar estadísticas de gastos
         const monthlySpent = stats.monthlyStats && stats.monthlyStats.length > 0 ? 
-          stats.monthlyStats[0].total_spent : 0;
+          Math.max(0, stats.monthlyStats[0].total_spent || 0) : 0;
         
-        document.getElementById('monthlyExpense').textContent = '$' + monthlySpent.toFixed(2);
+        document.getElementById('monthlyExpense').textContent = formatMoneyCOP(monthlySpent);
         document.getElementById('monthlyOrders').textContent = stats.monthlyStats && stats.monthlyStats.length > 0 ? 
           stats.monthlyStats[0].orders_count : 0;
-        document.getElementById('avgExpense').textContent = '$' + (stats.avg_order_value || 0).toFixed(2);
+        document.getElementById('avgExpense').textContent = formatMoneyCOP(stats.avg_order_value || 0);
         
         // Generar recomendaciones inteligentes
         generateRecommendations(stats, monthlySpent, stats.monthlyStats && stats.monthlyStats.length > 0 ? 
@@ -830,15 +876,16 @@
         // Actualizar presupuesto si existe
         const budget = localStorage.getItem(`budget_${userId}`);
         if (budget) {
-          const budgetAmount = parseFloat(budget);
-          const remaining = budgetAmount - monthlySpent;
-          document.getElementById('budgetRemaining').textContent = '$' + remaining.toFixed(2);
+          const budgetAmount = parseFloat(budget) || 0;
+          const remaining = Math.max(0, budgetAmount - monthlySpent); // Asegurar que no sea negativo
+          document.getElementById('budgetRemaining').textContent = formatMoneyCOP(remaining);
           
           // Cambiar color según el presupuesto
           const remainingElement = document.getElementById('budgetRemaining');
-          if (remaining < 0) {
+          const actualRemaining = budgetAmount - monthlySpent; // Para el check de color
+          if (actualRemaining < 0) {
             remainingElement.style.color = '#ef4444'; // Rojo si se excedió
-          } else if (remaining < budgetAmount * 0.2) {
+          } else if (actualRemaining < budgetAmount * 0.2) {
             remainingElement.style.color = '#f59e0b'; // Amarillo si queda poco
           } else {
             remainingElement.style.color = '#22c55e'; // Verde si está bien
@@ -873,7 +920,7 @@
           recommendations.push({
             icon: '💡',
             title: 'Presupuesto en zona de atención',
-            text: `Has gastado el ${budgetUsage.toFixed(1)}% de tu presupuesto. Te quedan $${(budgetAmount - monthlySpent).toFixed(2)} para el resto del mes.`,
+            text: `Has gastado el ${budgetUsage.toFixed(1)}% de tu presupuesto. Te quedan ${formatMoneyCOP(Math.max(0, budgetAmount - monthlySpent))} para el resto del mes.`,
             priority: 'medium'
           });
         } else if (budgetUsage < 30) {
@@ -1057,22 +1104,22 @@
       const daysPassed = today.getDate();
       const daysRemaining = daysInMonth - daysPassed;
       
-      // Proyección mensual
-      const dailyAverage = monthlySpent / daysPassed;
-      const projectedMonthly = dailyAverage * daysInMonth;
-      
       // Meta de ahorro
       const userId = localStorage.getItem('currentUserId');
       const budget = localStorage.getItem(`budget_${userId}`);
       const budgetAmount = budget ? parseFloat(budget) : 0;
       
+      // Calcular proyecciones
+      const dailyAverage = daysPassed > 0 ? Math.max(0, monthlySpent / daysPassed) : 0;
+      const projectedMonthly = dailyAverage * daysInMonth;
+      
       let savingsGoal = '';
       if (budgetAmount > 0) {
         const potentialSavings = budgetAmount - projectedMonthly;
         if (potentialSavings > 0) {
-          savingsGoal = `Puedes ahorrar $${potentialSavings.toFixed(2)} este mes`;
+          savingsGoal = `Puedes ahorrar ${formatMoneyCOP(Math.max(0, potentialSavings))} este mes`;
         } else {
-          savingsGoal = `Necesitas ajustar tu presupuesto en $${Math.abs(potentialSavings).toFixed(2)}`;
+          savingsGoal = `Necesitas ajustar tu presupuesto en ${formatMoneyCOP(Math.abs(potentialSavings))}`;
         }
       } else {
         savingsGoal = 'Establece un presupuesto para calcular tu potencial de ahorro';
@@ -1080,7 +1127,7 @@
       
       // Actualizar elementos
       document.getElementById('monthlyProjection').textContent = 
-        `Proyección: $${projectedMonthly.toFixed(2)} (promedio diario: $${dailyAverage.toFixed(2)})`;
+        `Proyección: ${formatMoneyCOP(projectedMonthly)} (promedio diario: ${formatMoneyCOP(dailyAverage)})`;
       
       document.getElementById('savingsGoal').textContent = savingsGoal;
       
@@ -1119,23 +1166,23 @@
       
       try {
         const stats = await fetch(`/api/orders/${userId}/stats`).then(r => r.json());
-        const monthlySpent = stats.monthlyStats && stats.monthlyStats.length > 0 ? 
-          stats.monthlyStats[0].total_spent : 0;
-        
-        const percentage = (monthlySpent / budget) * 100;
+        const budgetAmount = parseFloat(budget) || 0;
+        const monthlySpent = Math.max(0, stats.monthlyStats && stats.monthlyStats.length > 0 ? 
+          stats.monthlyStats[0].total_spent || 0 : 0);
+        const percentage = budgetAmount > 0 ? Math.min((monthlySpent / budgetAmount) * 100, 100) : 0;
         const progressFill = document.getElementById('budgetProgress');
         const budgetText = document.getElementById('budgetText');
         
-        progressFill.style.width = Math.min(percentage, 100) + '%';
+        progressFill.style.width = percentage + '%';
         progressFill.style.backgroundColor = percentage > 80 ? '#ef4444' : percentage > 60 ? '#f59e0b' : '#10b981';
         
-        budgetText.textContent = `$${monthlySpent.toFixed(2)} de $${budget} (${percentage.toFixed(1)}%)`;
+        budgetText.textContent = `${formatMoneyCOP(monthlySpent)} de ${formatMoneyCOP(budgetAmount)} (${percentage.toFixed(1)}%)`;
         
         // Actualizar análisis
-        document.getElementById('avgExpense').textContent = '$' + (stats.avg_order_value || 0).toFixed(2);
+        document.getElementById('avgExpense').textContent = formatMoneyCOP(stats.avg_order_value || 0);
         document.getElementById('monthlyOrders').textContent = stats.monthlyStats && stats.monthlyStats.length > 0 ? 
           stats.monthlyStats[0].orders_count : 0;
-        document.getElementById('monthlyExpense').textContent = '$' + monthlySpent.toFixed(2);
+        document.getElementById('monthlyExpense').textContent = formatMoneyCOP(monthlySpent);
       } catch (error) {
         console.error('Error actualizando presupuesto:', error);
       }
@@ -1148,10 +1195,10 @@
         const adminStats = await response.json();
         
         // Actualizar tarjetas de estadísticas
-        document.getElementById('adminTotalSales').textContent = '$' + (adminStats.totalSales || 0).toFixed(2);
+        document.getElementById('adminTotalSales').textContent = formatMoneyCOP(adminStats.totalSales || 0);
         document.getElementById('adminTotalOrders').textContent = adminStats.totalOrders || 0;
         document.getElementById('adminActiveCustomers').textContent = adminStats.activeCustomers || 0;
-        document.getElementById('adminAvgOrder').textContent = '$' + (adminStats.avgOrderValue || 0).toFixed(2);
+        document.getElementById('adminAvgOrder').textContent = formatMoneyCOP(adminStats.avgOrderValue || 0);
         
         // Generar gráfico de ventas mensuales
         generateAdminSalesChart(adminStats.monthlySales || []);
@@ -1174,7 +1221,7 @@
         return;
       }
       
-      const maxSales = Math.max(...monthlySales.map(m => m.totalSales));
+      const maxSales = Math.max(...monthlySales.map(m => Math.max(0, m.totalSales || 0)));
       
       chartContainer.innerHTML = `
         <div class="chart-header">
@@ -1191,8 +1238,8 @@
             return `
               <div class="chart-bar">
                 <div class="bar-container">
-                  <div class="bar" style="height: ${height}%" title="$${month.totalSales.toFixed(2)} en ${monthName} ${year}"></div>
-                  <div class="bar-value-overlay">$${month.totalSales.toFixed(2)}</div>
+                  <div class="bar" style="height: ${height}%" title="${formatMoneyCOP(Math.max(0, month.totalSales || 0))} en ${monthName} ${year}"></div>
+                  <div class="bar-value-overlay">${formatMoneyCOP(Math.max(0, month.totalSales || 0))}</div>
                 </div>
                 <span class="bar-label">${monthName}</span>
                 <span class="bar-year">${year}</span>
@@ -1225,7 +1272,7 @@
                 <div class="product-name">${product.name}</div>
                 <div class="product-stats">
                   <span class="product-sales">${product.totalSold} vendidos</span>
-                  <span class="product-revenue">$${product.totalRevenue.toFixed(2)}</span>
+                  <span class="product-revenue">${formatMoneyCOP(Math.max(0, product.totalRevenue || 0))}</span>
                 </div>
               </div>
               <div class="product-category">${product.category || 'Sin categoría'}</div>
@@ -1234,6 +1281,34 @@
         </div>
       `;
     }
+    
+    // Función para eliminar un pedido (debe ser global para el onclick)
+    window.deleteOrder = async function(orderId) {
+      const userId = localStorage.getItem('currentUserId');
+      if (!userId) {
+        return;
+      }
+      
+      try {
+        // Llamar a la API para eliminar el pedido
+        const response = await fetch(`/api/orders/${orderId}`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId })
+        });
+        
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.error || 'Error al eliminar el pedido');
+        }
+        
+        // Recargar el historial de pedidos
+        loadOrderHistory(userId);
+        
+      } catch (error) {
+        console.error('Error eliminando pedido:', error);
+      }
+    };
   </script>
 </body>
 </html>

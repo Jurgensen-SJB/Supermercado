@@ -5,7 +5,14 @@ console.log('EcoMarket App iniciando...');
 const ui = {
   qs(sel) { return document.querySelector(sel); },
   qsa(sel) { return [...document.querySelectorAll(sel)]; },
-  money(n) { return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'USD' }).format(n); },
+  money(n) { 
+    // Formato personalizado para pesos colombianos
+    const formatted = new Intl.NumberFormat('es-CO', { 
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(Math.round(n)); 
+    return `$${formatted} COP`;
+  },
   
   updateCartBadge() {
     const badge = this.qs('#cartCount');
@@ -271,7 +278,7 @@ const ui = {
     };
     
     // Actualizar total
-    const total = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const total = Math.max(0, items.reduce((sum, item) => sum + (Math.max(0, item.price || 0) * Math.max(0, item.quantity || 0)), 0));
     if (cartTotal) cartTotal.textContent = this.money(total);
   },
   
@@ -323,10 +330,12 @@ const cart = {
     
     // Calcular precio con descuento
     const hasDiscount = product.discount_percentage && product.discount_percentage > 0;
-    const finalPrice = hasDiscount ? product.price * (1 - product.discount_percentage / 100) : product.price;
+    const basePrice = Math.max(0, product.price || 0); // Asegurar precio positivo
+    const finalPrice = Math.max(0, hasDiscount ? basePrice * (1 - product.discount_percentage / 100) : basePrice);
     
     if (existing) {
-      existing.quantity += quantity;
+      existing.quantity = Math.max(0, existing.quantity + quantity); // Asegurar cantidad positiva
+      existing.price = Math.max(0, existing.price || finalPrice); // Asegurar precio positivo
       // Si la cantidad llega a 0 o menos, eliminar el item
       if (existing.quantity <= 0) {
         const filtered = items.filter(i => i.productId !== product.id);
@@ -438,7 +447,7 @@ const api = {
     }
   },
   
-  async createOrder(items, userId = null, paymentMethod = 'card', deliveryMethod = 'standard', shippingCost = 4.99) {
+  async createOrder(items, userId = null, paymentMethod = 'card', deliveryMethod = 'standard', shippingCost = 10000) {
     try {
       const payload = { 
         items, 
@@ -1863,11 +1872,27 @@ function validateAddressForm() {
 
 // Actualizar resumen del pedido
 function updateCheckoutSummary() {
-  const items = cart.get();
+  let items = cart.get();
+  
+  // LIMPIAR Y VALIDAR ITEMS: Asegurar que todos los precios y cantidades sean positivos
+  items = items.map(item => ({
+    ...item,
+    price: Math.max(0, Number(item.price) || 0),
+    quantity: Math.max(0, Number(item.quantity) || 0)
+  })).filter(item => item.price > 0 && item.quantity > 0); // Eliminar items inválidos
+  
+  // Guardar items corregidos de vuelta al carrito
+  if (items.length !== cart.get().length || items.some((item, idx) => {
+    const original = cart.get()[idx];
+    return original && (item.price !== original.price || item.quantity !== original.quantity);
+  })) {
+    localStorage.setItem('super_cart_v1', JSON.stringify(items));
+  }
+  
   const summaryItems = ui.qs('#checkoutSummaryItems');
   
   console.log('=== ACTUALIZANDO RESUMEN DEL CHECKOUT ===');
-  console.log('Items en carrito:', items);
+  console.log('Items en carrito (validados):', items);
   console.log('Elemento summaryItems encontrado:', !!summaryItems);
   console.log('Elemento summaryItems:', summaryItems);
   
@@ -1894,7 +1919,7 @@ function updateCheckoutSummary() {
               <div class="summary-item-name">${item.name}</div>
               <div class="summary-item-details">Cantidad: ${item.quantity}</div>
             </div>
-            <div class="summary-item-price">${ui.money(item.price * item.quantity)}</div>
+            <div class="summary-item-price">${ui.money(Math.max(0, item.price * item.quantity))}</div>
           </div>
         `;
       }).join('');
@@ -1905,17 +1930,26 @@ function updateCheckoutSummary() {
     console.error('No se encontró el elemento #checkoutSummaryItems');
   }
   
-  // Calcular totales
-  const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const tax = subtotal * 0.08; // 8% de impuesto
-  const shipping = getShippingCost();
-  const total = subtotal + tax + shipping;
+  // Calcular totales - asegurar que precios y cantidades sean positivos
+  const subtotal = Math.max(0, items.reduce((sum, item) => {
+    const price = Math.max(0, item.price || 0);
+    const quantity = Math.max(0, item.quantity || 0);
+    return sum + (price * quantity);
+  }, 0));
+  const tax = Math.max(0, subtotal * 0.08); // 8% de impuesto
+  const shipping = Math.max(0, getShippingCost());
+  const total = Math.max(0, subtotal + tax + shipping);
   
-  // Actualizar totales en el resumen
-  ui.qs('#checkoutSubtotal') && (ui.qs('#checkoutSubtotal').textContent = ui.money(subtotal));
-  ui.qs('#checkoutTax') && (ui.qs('#checkoutTax').textContent = ui.money(tax));
-  ui.qs('#checkoutShipping') && (ui.qs('#checkoutShipping').textContent = ui.money(shipping));
-  ui.qs('#checkoutTotal') && (ui.qs('#checkoutTotal').textContent = ui.money(total));
+  // Actualizar totales en el resumen - FORZAR valores positivos
+  const safeSubtotal = Math.abs(Math.max(0, subtotal));
+  const safeTax = Math.abs(Math.max(0, tax));
+  const safeShipping = Math.abs(Math.max(0, shipping));
+  const safeTotal = Math.abs(Math.max(0, total));
+  
+  ui.qs('#checkoutSubtotal') && (ui.qs('#checkoutSubtotal').textContent = ui.money(safeSubtotal));
+  ui.qs('#checkoutTax') && (ui.qs('#checkoutTax').textContent = ui.money(safeTax));
+  ui.qs('#checkoutShipping') && (ui.qs('#checkoutShipping').textContent = ui.money(safeShipping));
+  ui.qs('#checkoutTotal') && (ui.qs('#checkoutTotal').textContent = ui.money(safeTotal));
 }
 
 // Obtener costo de envío
@@ -1924,16 +1958,16 @@ function getShippingCost() {
   
   if (!checkoutData.delivery) {
     console.warn('checkoutData.delivery no está definido, usando standard');
-    return 4.99;
+    return 10000;
   }
   
   switch (checkoutData.delivery) {
-    case 'express': return 9.99;
-    case 'standard': return 4.99;
+    case 'express': return 18000;
+    case 'standard': return 10000;
     case 'pickup': return 0;
     default: 
       console.warn('Método de entrega desconocido:', checkoutData.delivery);
-      return 4.99;
+      return 10000;
   }
 }
 
@@ -1994,7 +2028,7 @@ async function completeOrder() {
   
   try {
     console.log('Obteniendo items del carrito...');
-    const items = cart.get();
+    let items = cart.get();
     console.log('Items del carrito:', items);
     
     if (!items || items.length === 0) {
@@ -2004,10 +2038,22 @@ async function completeOrder() {
     
     console.log('checkoutData actual antes de procesar:', checkoutData);
     
-    const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    const tax = subtotal * 0.08;
-    const shipping = getShippingCost();
-    const total = subtotal + tax + shipping;
+    // VALIDAR Y LIMPIAR ITEMS: Asegurar que todos los precios y cantidades sean positivos
+    items = items.map(item => ({
+      ...item,
+      price: Math.max(0, Number(item.price) || 0),
+      quantity: Math.max(0, Number(item.quantity) || 0)
+    })).filter(item => item.price > 0 && item.quantity > 0);
+    
+    // Calcular totales - asegurar que precios y cantidades sean positivos
+    const subtotal = Math.max(0, items.reduce((sum, item) => {
+      const price = Math.max(0, item.price || 0);
+      const quantity = Math.max(0, item.quantity || 0);
+      return sum + (price * quantity);
+    }, 0));
+    const tax = Math.abs(Math.max(0, subtotal * 0.08));
+    const shipping = Math.abs(Math.max(0, getShippingCost()));
+    const total = Math.abs(Math.max(0, subtotal + tax + shipping));
     
     console.log('Cálculos:', { subtotal, tax, shipping, total });
     
@@ -2065,8 +2111,8 @@ async function completeOrder() {
     const order = await api.createOrder(payload, currentUser.id, checkoutData.payment, checkoutData.delivery, shipping);
     console.log('Pedido creado:', order);
     
-    // Mostrar confirmación
-    alert(`🎉 ¡Pedido completado exitosamente!\n\n📦 Pedido #${order.id}\n💰 Total: ${ui.money(total)}\n🚚 Método: ${getDeliveryMethodName()}\n💳 Pago: ${getPaymentMethodName()}\n\n¡Gracias por tu compra!`);
+    // Mostrar notificación push de compra exitosa
+    ui.showNotification('Compra exitosa', 'success');
     
     // Limpiar carrito y cerrar modal
     cart.clear();

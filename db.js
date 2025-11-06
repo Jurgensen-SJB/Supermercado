@@ -59,6 +59,31 @@ function migrate() {
     // Columna ya existe, ignorar error
   }
 
+  // Añadir columnas adicionales a orders si no existen
+  try {
+    db.exec(`ALTER TABLE orders ADD COLUMN deleted INTEGER DEFAULT 0;`);
+  } catch (e) {
+    // Columna ya existe, ignorar error
+  }
+
+  try {
+    db.exec(`ALTER TABLE orders ADD COLUMN payment_method TEXT;`);
+  } catch (e) {
+    // Columna ya existe, ignorar error
+  }
+
+  try {
+    db.exec(`ALTER TABLE orders ADD COLUMN delivery_method TEXT;`);
+  } catch (e) {
+    // Columna ya existe, ignorar error
+  }
+
+  try {
+    db.exec(`ALTER TABLE orders ADD COLUMN shipping_cost REAL DEFAULT 0;`);
+  } catch (e) {
+    // Columna ya existe, ignorar error
+  }
+
   db.exec(`
     CREATE TABLE IF NOT EXISTS orders (
       id INTEGER PRIMARY KEY AUTOINCREMENT,

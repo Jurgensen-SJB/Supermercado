@@ -335,14 +335,27 @@ app.get('/api/orders/:userId', (req, res) => {
     ORDER BY o.created_at DESC
   `).all(userId);
   
-  console.log('Pedidos devueltos para usuario', userId, ':', orders.map(o => ({
+  // Obtener items completos para cada pedido con nombres de productos
+  const itemsStmt = db.prepare(`
+    SELECT oi.*, p.name as product_name
+    FROM order_items oi
+    LEFT JOIN products p ON oi.product_id = p.id
+    WHERE oi.order_id = ?
+  `);
+  const ordersWithItems = orders.map(order => ({
+    ...order,
+    items: itemsStmt.all(order.id)
+  }));
+  
+  console.log('Pedidos devueltos para usuario', userId, ':', ordersWithItems.map(o => ({
     id: o.id,
     payment_method: o.payment_method,
     delivery_method: o.delivery_method,
-    shipping_cost: o.shipping_cost
+    shipping_cost: o.shipping_cost,
+    items_count: o.items?.length
   })));
   
-  res.json(orders);
+  res.json(ordersWithItems);
 });
 
 app.get('/api/orders/:userId/stats', (req, res) => {
