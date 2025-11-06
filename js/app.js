@@ -210,13 +210,10 @@ const ui = {
       if (deleteId) {
         console.log('Delete button clicked, productId:', deleteId);
         console.log('Current cart items:', items);
-        if (confirm('¿Eliminar este producto del carrito?')) {
-          console.log('User confirmed deletion');
-          cart.remove(deleteId);
-          this.renderCart();
-          this.updateCartBadge();
-          console.log('Cart after removal:', cart.get());
-        }
+        cart.remove(deleteId);
+        this.renderCart();
+        this.updateCartBadge();
+        console.log('Cart after removal:', cart.get());
       }
     };
     
@@ -848,10 +845,39 @@ function openAccountModal() {
   modal.classList.remove('hidden');
 }
 
+function openAboutModal() {
+  const overlay = ui.qs('#overlay');
+  const modal = ui.qs('#aboutModal');
+  
+  if (!overlay || !modal) {
+    console.error('Modal elements not found');
+    return;
+  }
+  
+  // Event listeners para cerrar el modal
+  ui.qs('#aboutClose')?.addEventListener('click', closeModal);
+  
+  // Event listener para el botón "Comenzar a Comprar"
+  ui.qs('#startShopping')?.addEventListener('click', () => {
+    closeModal();
+    // Scroll suave a la sección de productos
+    const grid = ui.qs('#grid');
+    if (grid) {
+      grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+  
+  overlay.onclick = closeModal;
+  overlay.classList.remove('hidden');
+  modal.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
 function closeModal() {
   ui.qs('#overlay')?.classList.add('hidden');
   ui.qs('#productModal')?.classList.add('hidden');
   ui.qs('#accountModal')?.classList.add('hidden');
+  ui.qs('#aboutModal')?.classList.add('hidden');
   document.body.style.overflow = '';
 }
 
@@ -888,6 +914,9 @@ function debounce(func, wait) {
     timeout = setTimeout(later, wait);
   };
 }
+
+// Variable para mantener la categoría actual (accesible globalmente)
+let currentCategory = '';
 
 // Main function
 async function bootIndex() {
@@ -954,17 +983,18 @@ async function bootIndex() {
     
 
 // Load products function
-async function loadProducts(category = '') {
+async function loadProducts(category = '', query = '') {
   try {
-    console.log('Cargando productos para categoría:', category);
+    console.log('Cargando productos - categoría:', category, 'búsqueda:', query);
     let products;
     
     if (category === 'descuentos') {
       // Cargar todos los productos y filtrar solo los que tienen descuento
-      const allProducts = await api.listProducts({});
+      const allProducts = await api.listProducts({ q: query });
       products = allProducts.filter(p => p.discount_percentage && p.discount_percentage > 0);
     } else {
-      products = await api.listProducts({ category });
+      // Pasar tanto la categoría como la búsqueda al API
+      products = await api.listProducts({ category, q: query });
     }
     
     ui.renderProducts(products);
@@ -982,8 +1012,9 @@ async function loadProducts(category = '') {
     const search = ui.qs('#search');
     if (search) {
       search.addEventListener('input', debounce(() => {
-        const query = search.value;
-        loadProducts(query ? '' : ''); // For now, just reload all
+        const query = search.value.trim();
+        // Mantener la categoría actual mientras se busca
+        loadProducts(currentCategory, query);
       }, 300));
     }
     
@@ -1000,7 +1031,10 @@ async function loadProducts(category = '') {
       ecoMode.toggle();
       updateEcoModeIndicator();
       updateEcoIconState();
-      loadProducts(); // Reload to show eco badges
+      // Mantener categoría y búsqueda actuales
+      const searchInput = ui.qs('#search');
+      const query = searchInput ? searchInput.value.trim() : '';
+      loadProducts(currentCategory, query);
     });
     
     // Función global para toggle del modo ecológico
@@ -1008,7 +1042,10 @@ async function loadProducts(category = '') {
       ecoMode.toggle();
       updateEcoModeIndicator();
       updateEcoIconState();
-      loadProducts();
+      // Mantener categoría y búsqueda actuales
+      const searchInput = ui.qs('#search');
+      const query = searchInput ? searchInput.value.trim() : '';
+      loadProducts(currentCategory, query);
     };
     
     // Función para actualizar el indicador de modo ecológico
@@ -1142,7 +1179,15 @@ async function loadProducts(category = '') {
           btn.classList.add('active');
           const category = btn.dataset.cat;
           console.log('Categoría seleccionada:', category);
-          loadProducts(category);
+          // Actualizar la categoría actual
+          currentCategory = category;
+          // Limpiar la búsqueda cuando se cambia de categoría
+          const searchInput = ui.qs('#search');
+          if (searchInput) {
+            searchInput.value = '';
+          }
+          // Cargar productos con la nueva categoría y sin búsqueda
+          loadProducts(category, '');
         };
       });
     }
@@ -1150,8 +1195,9 @@ async function loadProducts(category = '') {
     // Validar y limpiar carrito antes de cargar productos
     await cart.validateAndClean();
     
-    // Load initial products
-    await loadProducts();
+    // Load initial products (sin categoría ni búsqueda)
+    currentCategory = '';
+    await loadProducts('', '');
     
     // Event listeners para botones hero
     ui.qs('#shopNow')?.addEventListener('click', () => {
@@ -1186,7 +1232,7 @@ async function loadProducts(category = '') {
     });
 
     ui.qs('#learnMore')?.addEventListener('click', () => {
-      alert('🌱 EcoMarket - Tu supermercado ecológico de confianza!\n\n🍃 Productos 100% ecológicos\n🚚 Delivery en menos de 2 horas\n💚 Comprometidos con el medio ambiente\n⭐ Calidad garantizada\n\n🏷️ ¡Nueva sección de DESCUENTOS disponible!\n💚 Modo ecológico para productos sostenibles\n\n¡Gracias por elegir EcoMarket!');
+      openAboutModal();
     });
     
     console.log('bootIndex completado exitosamente');
@@ -1254,6 +1300,7 @@ function initializeCheckout() {
   
   showCheckoutStep(1);
   setupCheckoutEventListeners();
+  setupFieldErrorListeners();
   
   // Forzar visibilidad de botones
   setTimeout(() => {
@@ -1261,6 +1308,68 @@ function initializeCheckout() {
   }, 100);
   
   console.log('Checkout inicializado');
+}
+
+// Configurar event listeners para limpiar errores al escribir
+function setupFieldErrorListeners() {
+  const fieldIds = ['firstName', 'lastName', 'address', 'city', 'postalCode', 'phone', 'cardNumber', 'expiryDate', 'cvv', 'cardName'];
+  
+  fieldIds.forEach(fieldId => {
+    const field = ui.qs(`#${fieldId}`);
+    if (field) {
+      // Agregar listener para limpiar error al escribir
+      field.addEventListener('input', () => {
+        if (field.value.trim()) {
+          removeFieldError(fieldId);
+        }
+      });
+      
+      // Limpiar error al perder el foco si tiene valor
+      field.addEventListener('blur', () => {
+        if (field.value.trim()) {
+          removeFieldError(fieldId);
+        }
+      });
+    }
+  });
+  
+  // Validación especial para campos numéricos
+  setupNumericFields();
+}
+
+// Configurar validación para campos que solo deben aceptar números
+function setupNumericFields() {
+  // Campo de código postal
+  const postalCode = ui.qs('#postalCode');
+  if (postalCode && !postalCode.hasAttribute('data-numeric-listener')) {
+    postalCode.addEventListener('input', (e) => {
+      // Solo permitir números
+      e.target.value = e.target.value.replace(/[^0-9]/g, '');
+    });
+    postalCode.setAttribute('data-numeric-listener', 'true');
+  }
+  
+  // Campo de teléfono
+  const phone = ui.qs('#phone');
+  if (phone && !phone.hasAttribute('data-numeric-listener')) {
+    phone.addEventListener('input', (e) => {
+      // Permitir números, espacios, guiones, paréntesis y el signo +
+      let value = e.target.value;
+      // Si el usuario intenta escribir letras, solo mantener números y caracteres permitidos
+      value = value.replace(/[^\d\s\-\+\(\)]/g, '');
+      e.target.value = value;
+    });
+    phone.setAttribute('data-numeric-listener', 'true');
+    
+    // También validar en keypress para prevenir que se escriban letras
+    phone.addEventListener('keypress', (e) => {
+      const char = String.fromCharCode(e.which);
+      // Permitir números y caracteres especiales de formato de teléfono
+      if (!/[0-9\s\-\+\(\)]/.test(char) && !e.ctrlKey && !e.metaKey) {
+        e.preventDefault();
+      }
+    });
+  }
 }
 
 // Forzar visibilidad de botones
@@ -1306,6 +1415,9 @@ function forceButtonVisibility() {
 function showCheckoutStep(step) {
   console.log(`Mostrando paso ${step}`);
   
+  // Limpiar todos los mensajes de error al cambiar de paso
+  clearAllFieldErrors();
+  
   // Ocultar todos los pasos
   ui.qsa('.checkout-step').forEach(s => s.classList.add('hidden'));
   
@@ -1331,6 +1443,7 @@ function showCheckoutStep(step) {
     // Reconfigurar event listeners cuando se muestra un paso
     setTimeout(() => {
       setupStepEventListeners(step);
+      setupFieldErrorListeners();
     }, 100);
   } else {
     console.error(`Paso ${step} no encontrado`);
@@ -1528,26 +1641,80 @@ function setupCheckoutEventListeners() {
   }
 }
 
+// Funciones helper para mensajes de error
+function showFieldError(fieldId, message) {
+  const field = ui.qs(`#${fieldId}`);
+  if (!field) return;
+  
+  // Remover mensaje de error existente
+  removeFieldError(fieldId);
+  
+  // Agregar estilo de error al campo
+  field.style.borderColor = '#ef4444';
+  field.classList.add('error-field');
+  
+  // Crear elemento de mensaje de error
+  const errorMsg = document.createElement('div');
+  errorMsg.className = 'field-error';
+  errorMsg.id = `${fieldId}-error`;
+  errorMsg.textContent = message;
+  errorMsg.style.color = '#ef4444';
+  errorMsg.style.fontSize = '11px';
+  errorMsg.style.marginTop = '1px';
+  errorMsg.style.marginBottom = '0';
+  errorMsg.style.paddingTop = '0';
+  errorMsg.style.paddingBottom = '0';
+  errorMsg.style.lineHeight = '1.2';
+  errorMsg.style.minHeight = '0';
+  
+  // Insertar después del campo
+  field.parentNode.insertBefore(errorMsg, field.nextSibling);
+}
+
+function removeFieldError(fieldId) {
+  const field = ui.qs(`#${fieldId}`);
+  if (!field) return;
+  
+  // Remover estilo de error
+  field.style.borderColor = '';
+  field.classList.remove('error-field');
+  
+  // Remover mensaje de error existente
+  const existingError = ui.qs(`#${fieldId}-error`);
+  if (existingError) {
+    existingError.remove();
+  }
+}
+
+function clearAllFieldErrors() {
+  const fieldIds = ['firstName', 'lastName', 'address', 'city', 'postalCode', 'phone', 'cardNumber', 'expiryDate', 'cvv', 'cardName'];
+  fieldIds.forEach(fieldId => removeFieldError(fieldId));
+}
+
 // Validar formulario de dirección
 function validateAddressForm() {
+  clearAllFieldErrors();
+  
   // Si es pickup, solo validar nombre y teléfono
   if (checkoutData.delivery === 'pickup') {
-    const requiredFields = ['firstName', 'lastName', 'phone'];
+    const requiredFields = [
+      { id: 'firstName', label: 'Nombre' },
+      { id: 'lastName', label: 'Apellido' },
+      { id: 'phone', label: 'Teléfono' }
+    ];
     let isValid = true;
     
-    requiredFields.forEach(fieldId => {
-      const field = ui.qs(`#${fieldId}`);
+    requiredFields.forEach(({ id, label }) => {
+      const field = ui.qs(`#${id}`);
       if (field && !field.value.trim()) {
-        field.style.borderColor = '#ef4444';
+        showFieldError(id, `Por favor completa el campo ${label}`);
         isValid = false;
-      } else if (field) {
-        field.style.borderColor = '';
+      } else {
+        removeFieldError(id);
       }
     });
     
-    if (!isValid) {
-      alert('Para recoger en tienda, por favor completa al menos tu nombre y teléfono');
-    } else {
+    if (isValid) {
       // Guardar datos mínimos para pickup
       checkoutData.address = {
         firstName: ui.qs('#firstName').value,
@@ -1557,28 +1724,46 @@ function validateAddressForm() {
         city: 'Recoger en tienda',
         postalCode: 'N/A'
       };
+    } else {
+      // Hacer scroll al primer campo con error
+      const firstErrorField = requiredFields.find(({ id }) => {
+        const field = ui.qs(`#${id}`);
+        return field && !field.value.trim();
+      });
+      if (firstErrorField) {
+        const field = ui.qs(`#${firstErrorField.id}`);
+        if (field) {
+          field.focus();
+          field.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }
     }
     
     return isValid;
   }
   
   // Para entregas normales, validar todos los campos
-  const requiredFields = ['firstName', 'lastName', 'address', 'city', 'postalCode', 'phone'];
+  const requiredFields = [
+    { id: 'firstName', label: 'Nombre' },
+    { id: 'lastName', label: 'Apellido' },
+    { id: 'address', label: 'Dirección' },
+    { id: 'city', label: 'Ciudad' },
+    { id: 'postalCode', label: 'Código Postal' },
+    { id: 'phone', label: 'Teléfono' }
+  ];
   let isValid = true;
   
-  requiredFields.forEach(fieldId => {
-    const field = ui.qs(`#${fieldId}`);
+  requiredFields.forEach(({ id, label }) => {
+    const field = ui.qs(`#${id}`);
     if (field && !field.value.trim()) {
-      field.style.borderColor = '#ef4444';
+      showFieldError(id, `Por favor completa el campo ${label}`);
       isValid = false;
-    } else if (field) {
-      field.style.borderColor = '';
+    } else {
+      removeFieldError(id);
     }
   });
   
-  if (!isValid) {
-    alert('Por favor completa todos los campos requeridos');
-  } else {
+  if (isValid) {
     // Guardar datos de dirección
     checkoutData.address = {
       firstName: ui.qs('#firstName').value,
@@ -1588,6 +1773,19 @@ function validateAddressForm() {
       postalCode: ui.qs('#postalCode').value,
       phone: ui.qs('#phone').value
     };
+  } else {
+    // Hacer scroll al primer campo con error
+    const firstErrorField = requiredFields.find(({ id }) => {
+      const field = ui.qs(`#${id}`);
+      return field && !field.value.trim();
+    });
+    if (firstErrorField) {
+      const field = ui.qs(`#${firstErrorField.id}`);
+      if (field) {
+        field.focus();
+        field.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
   }
   
   return isValid;
@@ -1683,21 +1881,34 @@ async function completeOrder() {
   // Validar datos de pago si es tarjeta
   if (checkoutData.payment === 'card') {
     console.log('Validando datos de tarjeta...');
-    const cardFields = ['cardNumber', 'expiryDate', 'cvv', 'cardName'];
+    const cardFields = [
+      { id: 'cardNumber', label: 'Número de Tarjeta' },
+      { id: 'expiryDate', label: 'Fecha de Vencimiento' },
+      { id: 'cvv', label: 'CVV' },
+      { id: 'cardName', label: 'Nombre en la Tarjeta' }
+    ];
     let isValid = true;
     
-    cardFields.forEach(fieldId => {
-      const field = ui.qs(`#${fieldId}`);
+    cardFields.forEach(({ id, label }) => {
+      const field = ui.qs(`#${id}`);
       if (field && !field.value.trim()) {
-        field.style.borderColor = '#ef4444';
+        showFieldError(id, `Por favor completa el campo ${label}`);
         isValid = false;
-      } else if (field) {
-        field.style.borderColor = '';
+      } else {
+        removeFieldError(id);
       }
     });
     
     if (!isValid) {
-      alert('Por favor completa todos los datos de la tarjeta');
+      // Hacer scroll al primer campo con error
+      const firstErrorField = cardFields.find(({ id }) => {
+        const field = ui.qs(`#${id}`);
+        return field && !field.value.trim();
+      });
+      if (firstErrorField) {
+        const field = ui.qs(`#${firstErrorField.id}`);
+        if (field) field.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
       return;
     }
     
@@ -1795,7 +2006,9 @@ async function completeOrder() {
     
     // Recargar productos si estamos en la página principal
     if (typeof loadProducts === 'function') {
-      loadProducts();
+      const searchInput = ui.qs('#search');
+      const query = searchInput ? searchInput.value.trim() : '';
+      loadProducts(currentCategory, query);
     }
     
   } catch (error) {
