@@ -1,0 +1,1735 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoMarket - Design System</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <style>
+        /* Estilos específicos para el design system */
+        .design-system {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Ubuntu, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+        
+        .section {
+            background: var(--card);
+            margin: 30px 0;
+            padding: 30px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            border: 2px solid var(--line);
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            color: var(--text);
+            margin-bottom: 20px;
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 10px;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+        }
+        
+        .subsection-title {
+            font-size: 1.8rem;
+            color: var(--text);
+            margin: 25px 0 15px 0;
+            border-left: 4px solid var(--primary);
+            padding-left: 15px;
+            font-weight: 600;
+        }
+        
+        .element-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .element-card {
+            background: var(--bg);
+            padding: 20px;
+            border-radius: var(--radius);
+            border: 2px solid var(--line);
+            box-shadow: var(--shadow);
+        }
+        
+        .element-label {
+            font-weight: bold;
+            color: var(--text);
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .color-palette {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .color-item {
+            text-align: center;
+            min-width: 120px;
+        }
+        
+        .color-box {
+            width: 100px;
+            height: 100px;
+            border-radius: var(--radius);
+            margin: 0 auto 10px;
+            border: 2px solid var(--line);
+            box-shadow: var(--shadow);
+        }
+        
+        .color-name {
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+        
+        .color-code {
+            font-size: 0.8rem;
+            color: var(--muted);
+            font-family: monospace;
+        }
+        
+        .typography-example {
+            margin: 15px 0;
+            padding: 15px;
+            background: var(--bg);
+            border-radius: var(--radius);
+            border: 1px solid var(--line);
+        }
+        
+        .mockup-section {
+            background: var(--card);
+            border: 2px solid var(--line);
+            border-radius: var(--radius-lg);
+            margin: 20px 0;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+        
+        .mockup-header {
+            background: var(--primary);
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+        }
+        
+        .mockup-content {
+            padding: 20px;
+        }
+        
+        .form-group {
+            margin: 15px 0;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: var(--text);
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid var(--line);
+            border-radius: var(--radius);
+            font-size: 14px;
+            background: var(--bg);
+            color: var(--text);
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.15);
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+        
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .icon-item {
+            text-align: center;
+            padding: 15px;
+            background: var(--bg);
+            border-radius: var(--radius);
+            border: 1px solid var(--line);
+        }
+        
+        .icon-item i {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .icon-name {
+            font-size: 0.8rem;
+            color: var(--muted);
+        }
+        
+        .product-card {
+            background: var(--card);
+            border: 2px solid var(--line);
+            border-radius: var(--radius-lg);
+            padding: 15px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        
+        .product-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+        
+        .product-image {
+            width: 100px;
+            height: 100px;
+            background: var(--bg);
+            border-radius: var(--radius);
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            border: 1px solid var(--line);
+        }
+        
+        .product-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--text);
+        }
+        
+        .product-price {
+            color: var(--primary-dark);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary), var(--primary-2));
+            color: white;
+            padding: 20px;
+            border-radius: var(--radius-lg);
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .navigation-example {
+            background: var(--card);
+            color: var(--text);
+            padding: 15px;
+            border-radius: var(--radius-lg);
+            margin: 20px 0;
+            border: 2px solid var(--line);
+        }
+        
+        .nav-item {
+            display: inline-block;
+            margin: 0 15px;
+            padding: 8px 15px;
+            background: var(--bg);
+            border-radius: var(--radius);
+            cursor: pointer;
+            border: 2px solid var(--line);
+            transition: var(--transition);
+        }
+        
+        .nav-item.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .nav-item:hover {
+            border-color: var(--primary);
+            transform: translateY(-1px);
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: var(--radius);
+            margin: 15px 0;
+            border: 2px solid;
+        }
+        
+        .alert-success {
+            background: #dcfce7;
+            border-color: #bbf7d0;
+            color: #16a34a;
+        }
+        
+        .alert-warning {
+            background: #fef3c7;
+            border-color: #fed7aa;
+            color: #d97706;
+        }
+        
+        .alert-error {
+            background: #fee2e2;
+            border-color: #fecaca;
+            color: #dc2626;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: var(--radius);
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .badge-success {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .badge-warning {
+            background: #f39c12;
+            color: white;
+        }
+        
+        .badge-danger {
+            background: var(--secondary);
+            color: white;
+        }
+        
+        .progress-bar {
+            background: var(--line);
+            border-radius: 10px;
+            height: 20px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress-fill {
+            background: var(--primary);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+        
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: var(--card);
+            padding: 30px;
+            border-radius: var(--radius-lg);
+            max-width: 500px;
+            width: 90%;
+            box-shadow: var(--shadow-xl);
+            border: 2px solid var(--line);
+        }
+        
+        .modal-header {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: var(--text);
+        }
+        
+        .modal-footer {
+            text-align: right;
+            margin-top: 20px;
+        }
+        
+        .page-break {
+            page-break-before: always;
+        }
+        
+        @media print {
+            .design-system {
+                background: white;
+                box-shadow: none;
+            }
+            
+            .section {
+                box-shadow: none;
+                border: 1px solid #ddd;
+                margin: 20px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="design-system">
+        <!-- LOGOTIPO E IDENTIDAD -->
+        <div class="section">
+            <h1 class="section-title">🛒 LOGOTIPO E IDENTIDAD</h1>
+            
+            <div class="subsection-title" style="text-align: center;">Logotipo Principal EcoMarket</div>
+            <div class="element-card">
+                <div class="element-label" style="text-align: center;">Logo EcoMarket Original</div>
+                <div style="display: flex; align-items: center; justify-content: center; min-height: 200px; padding: 20px;">
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 20px;">
+                        <img src="../assets/img/carritologo.png" alt="EcoMarket Logo" style="max-width: 200px; height: auto;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 2.5rem; color: var(--primary); font-weight: bold; font-family: 'Inter', sans-serif;">EcoMarket</div>
+                            <div style="font-size: 1.2rem; color: var(--muted); font-family: 'Inter', sans-serif;">Delivery Express</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="subsection-title" style="text-align: center;">Variaciones del Logo</div>
+            <div class="element-grid">
+                <div class="element-card">
+                    <div class="element-label" style="text-align: center;">Logo Horizontal</div>
+                    <div style="display: flex; align-items: center; justify-content: center; height: 150px; padding: 15px;">
+                        <div style="display: flex; align-items: center; gap: 20px;">
+                            <img src="../assets/img/carritologo.png" alt="EcoMarket Logo" style="max-width: 100px; height: auto;">
+                            <div>
+                                <div style="font-size: 1.8rem; color: var(--primary); font-weight: bold; font-family: 'Inter', sans-serif;">EcoMarket</div>
+                                <div style="font-size: 1rem; color: var(--muted); font-family: 'Inter', sans-serif;">Delivery Express</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="element-card">
+                    <div class="element-label" style="text-align: center;">Logo Vertical</div>
+                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 200px; padding: 15px;">
+                        <img src="../assets/img/carritologo.png" alt="EcoMarket Logo" style="max-width: 150px; height: auto;">
+                        <div style="margin-top: 15px; text-align: center;">
+                            <div style="font-size: 1.3rem; color: var(--primary); font-weight: bold; font-family: 'Inter', sans-serif;">EcoMarket</div>
+                            <div style="font-size: 0.9rem; color: var(--muted); font-family: 'Inter', sans-serif;">Delivery Express</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="element-card">
+                    <div class="element-label" style="text-align: center;">Logo Monocromo</div>
+                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 200px; padding: 15px;">
+                        <img src="../assets/img/carritologo.png" alt="EcoMarket Logo" style="max-width: 200px; height: auto;">
+                        <div style="margin-top: 15px; text-align: center;">
+                            <div style="font-size: 1.5rem; color: var(--text); font-weight: bold; font-family: 'Inter', sans-serif;">EcoMarket</div>
+                            <div style="font-size: 1rem; color: var(--muted); font-family: 'Inter', sans-serif;">Delivery Express</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="subsection-title" style="text-align: center;">Variaciones en Modo Eco (Verde)</div>
+            <div class="element-grid">
+                <div class="element-card">
+                    <div class="element-label" style="text-align: center;">Logo Eco - Horizontal</div>
+                    <div style="display: flex; align-items: center; justify-content: center; height: 150px; padding: 15px;">
+                        <div style="display: flex; align-items: center; gap: 20px;">
+                            <img src="../assets/img/carritologo.png" alt="EcoMarket Logo" style="max-width: 100px; height: auto;">
+                            <div>
+                                <div style="font-size: 1.8rem; color: #22c55e; font-weight: bold; font-family: 'Inter', sans-serif;">EcoMarket</div>
+                                <div style="font-size: 1rem; color: var(--muted); font-family: 'Inter', sans-serif;">Delivery Express</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="element-card">
+                    <div class="element-label" style="text-align: center;">Logo Eco - Vertical</div>
+                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 200px; padding: 15px;">
+                        <img src="../assets/img/carritologo.png" alt="EcoMarket Logo" style="max-width: 150px; height: auto;">
+                        <div style="margin-top: 15px; text-align: center;">
+                            <div style="font-size: 1.3rem; color: #22c55e; font-weight: bold; font-family: 'Inter', sans-serif;">EcoMarket</div>
+                            <div style="font-size: 0.9rem; color: var(--muted); font-family: 'Inter', sans-serif;">Delivery Express</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="element-card">
+                    <div class="element-label" style="text-align: center;">Logo Eco - Monocromo</div>
+                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 200px; padding: 15px;">
+                        <img src="../assets/img/carritologo.png" alt="EcoMarket Logo" style="max-width: 200px; height: auto;">
+                        <div style="margin-top: 15px; text-align: center;">
+                            <div style="font-size: 1.5rem; color: #16a34a; font-weight: bold; font-family: 'Inter', sans-serif;">EcoMarket</div>
+                            <div style="font-size: 1rem; color: var(--muted); font-family: 'Inter', sans-serif;">Delivery Express</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PALETA CROMÁTICA -->
+        <div class="section">
+            <h1 class="section-title">🎨 PALETA CROMÁTICA</h1>
+            
+            <div class="subsection-title">Colores Primarios (Teal)</div>
+            <div class="color-palette">
+                <div class="color-item">
+                    <div class="color-box" style="background: var(--primary);"></div>
+                    <div class="color-name">Teal Principal</div>
+                    <div class="color-code">#14b8a6</div>
+                </div>
+                <div class="color-item">
+                    <div class="color-box" style="background: var(--primary-2);"></div>
+                    <div class="color-name">Teal Claro</div>
+                    <div class="color-code">#2dd4bf</div>
+                </div>
+                <div class="color-item">
+                    <div class="color-box" style="background: var(--primary-dark);"></div>
+                    <div class="color-name">Teal Oscuro</div>
+                    <div class="color-code">#0d9488</div>
+                </div>
+            </div>
+            
+            <div class="subsection-title">Colores Secundarios</div>
+            <div class="color-palette">
+                <div class="color-item">
+                    <div class="color-box" style="background: var(--secondary);"></div>
+                    <div class="color-name">Coral</div>
+                    <div class="color-code">#ff6b5a</div>
+                </div>
+                <div class="color-item">
+                    <div class="color-box" style="background: var(--secondary-2);"></div>
+                    <div class="color-name">Coral Claro</div>
+                    <div class="color-code">#ff7f72</div>
+                </div>
+                <div class="color-item">
+                    <div class="color-box" style="background: #22c55e;"></div>
+                    <div class="color-name">Verde Ecológico</div>
+                    <div class="color-code">#22c55e</div>
+                </div>
+                <div class="color-item">
+                    <div class="color-box" style="background: #4ade80;"></div>
+                    <div class="color-name">Verde Claro</div>
+                    <div class="color-code">#4ade80</div>
+                </div>
+            </div>
+            
+            <div class="subsection-title">Colores Neutros</div>
+            <div class="color-palette">
+                <div class="color-item">
+                    <div class="color-box" style="background: var(--card);"></div>
+                    <div class="color-name">Blanco</div>
+                    <div class="color-code">#ffffff</div>
+                </div>
+                <div class="color-item">
+                    <div class="color-box" style="background: var(--bg);"></div>
+                    <div class="color-name">Gris Muy Claro</div>
+                    <div class="color-code">#f8fafc</div>
+                </div>
+                <div class="color-item">
+                    <div class="color-box" style="background: var(--line);"></div>
+                    <div class="color-name">Gris Claro</div>
+                    <div class="color-code">#e2e8f0</div>
+                </div>
+                <div class="color-item">
+                    <div class="color-box" style="background: var(--muted);"></div>
+                    <div class="color-name">Gris Medio</div>
+                    <div class="color-code">#64748b</div>
+                </div>
+                <div class="color-item">
+                    <div class="color-box" style="background: var(--text);"></div>
+                    <div class="color-name">Gris Oscuro</div>
+                    <div class="color-code">#0f172a</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TIPOGRAFÍA -->
+        <div class="section">
+            <h1 class="section-title">📝 TIPOGRAFÍA</h1>
+            
+            <div class="subsection-title">Fuente Principal</div>
+            <div class="element-card">
+                <div class="element-label">Inter - Fuente Principal</div>
+                <div style="font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Ubuntu, Arial, sans-serif; padding: 15px; background: var(--bg); border-radius: var(--radius); border: 1px solid var(--line);">
+                    <p style="margin: 0 0 10px 0; font-size: 1.2rem; font-weight: 600;">Inter es la fuente principal de EcoMarket</p>
+                    <p style="margin: 0; font-size: 0.9rem; color: var(--muted);">Se usa en todos los textos: títulos, subtítulos, párrafos, botones y elementos de interfaz.</p>
+                </div>
+            </div>
+            
+            <div class="subsection-title">Jerarquía Tipográfica</div>
+            <div class="element-card">
+                <div class="element-label">Títulos Principales (H1) - Inter Bold</div>
+                <div class="typography-example">
+                    <h1 style="font-size: 2.5rem; color: var(--text); margin: 0; font-weight: 800; letter-spacing: -0.025em; font-family: 'Inter', sans-serif;">Título Principal</h1>
+                    <p style="margin: 5px 0 0 0; font-size: 0.8rem; color: var(--muted);">Inter Bold 800 - 2.5rem</p>
+                </div>
+            </div>
+            
+            <div class="element-card">
+                <div class="element-label">Títulos Secundarios (H2) - Inter SemiBold</div>
+                <div class="typography-example">
+                    <h2 style="font-size: 2rem; color: var(--text); margin: 0; font-weight: 700; font-family: 'Inter', sans-serif;">Título Secundario</h2>
+                    <p style="margin: 5px 0 0 0; font-size: 0.8rem; color: var(--muted);">Inter SemiBold 700 - 2rem</p>
+                </div>
+            </div>
+            
+            <div class="element-card">
+                <div class="element-label">Títulos Terciarios (H3) - Inter Medium</div>
+                <div class="typography-example">
+                    <h3 style="font-size: 1.5rem; color: var(--text); margin: 0; font-weight: 600; font-family: 'Inter', sans-serif;">Título Terciario</h3>
+                    <p style="margin: 5px 0 0 0; font-size: 0.8rem; color: var(--muted);">Inter Medium 600 - 1.5rem</p>
+                </div>
+            </div>
+            
+            <div class="element-card">
+                <div class="element-label">Texto Normal - Inter Regular</div>
+                <div class="typography-example">
+                    <p style="font-size: 1rem; color: var(--text); margin: 0; line-height: 1.6; font-family: 'Inter', sans-serif;">Este es un texto normal que se usa para el contenido principal de la aplicación.</p>
+                    <p style="margin: 5px 0 0 0; font-size: 0.8rem; color: var(--muted);">Inter Regular 400 - 1rem</p>
+                </div>
+            </div>
+            
+            <div class="element-card">
+                <div class="element-label">Texto Pequeño - Inter Regular</div>
+                <div class="typography-example">
+                    <p style="font-size: 0.875rem; color: var(--muted); margin: 0; font-family: 'Inter', sans-serif;">Este es texto pequeño para información secundaria o notas.</p>
+                    <p style="margin: 5px 0 0 0; font-size: 0.8rem; color: var(--muted);">Inter Regular 400 - 0.875rem</p>
+                </div>
+            </div>
+            
+            <div class="element-card">
+                <div class="element-label">Texto de Enlace - Inter SemiBold</div>
+                <div class="typography-example">
+                    <a href="#" style="color: var(--primary); text-decoration: none; font-weight: 600; font-family: 'Inter', sans-serif;">Enlace de ejemplo</a>
+                    <p style="margin: 5px 0 0 0; font-size: 0.8rem; color: var(--muted);">Inter SemiBold 600 - Color primario</p>
+                </div>
+            </div>
+            
+            <div class="subsection-title">Tipografía del Logo</div>
+            <div class="element-card">
+                <div class="element-label">EcoMarket - Inter Bold</div>
+                <div class="typography-example">
+                    <div style="font-size: 2rem; color: var(--primary); font-weight: bold; font-family: 'Inter', sans-serif; margin-bottom: 5px;">EcoMarket</div>
+                    <p style="margin: 0; font-size: 0.8rem; color: var(--muted);">Inter Bold 700 - Color teal (#14b8a6)</p>
+                </div>
+            </div>
+            
+            <div class="element-card">
+                <div class="element-label">Delivery Express - Inter Regular</div>
+                <div class="typography-example">
+                    <div style="font-size: 1.2rem; color: var(--muted); font-weight: normal; font-family: 'Inter', sans-serif; margin-bottom: 5px;">Delivery Express</div>
+                    <p style="margin: 0; font-size: 0.8rem; color: var(--muted);">Inter Regular 400 - Color gris (#64748b)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ICONOGRAFÍA -->
+        <div class="section">
+            <h1 class="section-title">🎯 ICONOGRAFÍA</h1>
+            
+            <div class="subsection-title">Iconos de Navegación</div>
+            <div class="icon-grid">
+                <div class="icon-item">
+                    <div style="font-size: 2rem;">🏠</div>
+                    <div class="icon-name">Inicio</div>
+                </div>
+                <div class="icon-item">
+                    <div style="font-size: 2rem;">🛒</div>
+                    <div class="icon-name">Carrito</div>
+                </div>
+                <div class="icon-item">
+                    <div style="font-size: 2rem;">👤</div>
+                    <div class="icon-name">Perfil</div>
+                </div>
+                <div class="icon-item">
+                    <div style="font-size: 2rem;">⚙️</div>
+                    <div class="icon-name">Configuración</div>
+                </div>
+                <div class="icon-item">
+                    <div style="font-size: 2rem;">📊</div>
+                    <div class="icon-name">Estadísticas</div>
+                </div>
+                <div class="icon-item">
+                    <div style="font-size: 2rem;">📦</div>
+                    <div class="icon-name">Productos</div>
+                </div>
+            </div>
+            
+            <div class="subsection-title">Iconos de Acciones</div>
+            <div class="icon-grid">
+                <div class="icon-item">
+                    <div style="font-size: 2rem;">➕</div>
+                    <div class="icon-name">Agregar</div>
+                </div>
+                <div class="icon-item">
+                    <div style="font-size: 2rem;">✏️</div>
+                    <div class="icon-name">Editar</div>
+                </div>
+                <div class="icon-item">
+                    <div style="font-size: 2rem;">🗑️</div>
+                    <div class="icon-name">Eliminar</div>
+                </div>
+                <div class="icon-item">
+                    <div style="font-size: 2rem;">👁️</div>
+                    <div class="icon-name">Ver</div>
+                </div>
+                <div class="icon-item">
+                    <div style="font-size: 2rem;">💾</div>
+                    <div class="icon-name">Guardar</div>
+                </div>
+                <div class="icon-item">
+                    <div style="font-size: 2rem;">🔍</div>
+                    <div class="icon-name">Buscar</div>
+                </div>
+            </div>
+            
+            <div class="subsection-title">Iconos de Estado</div>
+            <div class="icon-grid">
+                <div class="icon-item">
+                    <div style="font-size: 2rem;">✅</div>
+                    <div class="icon-name">Éxito</div>
+                </div>
+                <div class="icon-item">
+                    <div style="font-size: 2rem;">⚠️</div>
+                    <div class="icon-name">Advertencia</div>
+                </div>
+                <div class="icon-item">
+                    <div style="font-size: 2rem;">❌</div>
+                    <div class="icon-name">Error</div>
+                </div>
+                <div class="icon-item">
+                    <div style="font-size: 2rem;">ℹ️</div>
+                    <div class="icon-name">Información</div>
+                </div>
+                <div class="icon-item">
+                    <div style="font-size: 2rem;">🔒</div>
+                    <div class="icon-name">Bloqueado</div>
+                </div>
+                <div class="icon-item">
+                    <div style="font-size: 2rem;">🔓</div>
+                    <div class="icon-name">Desbloqueado</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BOTONES -->
+        <div class="section">
+            <h1 class="section-title">🔘 BOTONES</h1>
+            
+            <div class="subsection-title">Botones Primarios</div>
+            <div class="button-group">
+                <button class="btn primary">Botón Primario</button>
+                <button class="btn primary" disabled>Deshabilitado</button>
+            </div>
+            
+            <div class="subsection-title">Botones Secundarios</div>
+            <div class="button-group">
+                <button class="btn">Botón Secundario</button>
+                <button class="btn" style="border-color: var(--primary);">Botón Outline</button>
+            </div>
+            
+            <div class="subsection-title">Botones de Acción</div>
+            <div class="button-group">
+                <button class="btn primary">✅ Agregar al Carrito</button>
+                <button class="btn" style="background: #f39c12; color: white; border-color: #f39c12;">⚠️ Advertencia</button>
+                <button class="btn" style="background: var(--secondary); color: white; border-color: var(--secondary);">❌ Eliminar</button>
+            </div>
+            
+            <div class="subsection-title">Tamaños de Botones</div>
+            <div class="button-group">
+                <button class="btn primary" style="padding: 8px 16px; font-size: 12px;">Pequeño</button>
+                <button class="btn primary">Normal</button>
+                <button class="btn primary" style="padding: 16px 32px; font-size: 18px;">Grande</button>
+            </div>
+        </div>
+
+        <!-- FORMULARIOS -->
+        <div class="section">
+            <h1 class="section-title">📋 FORMULARIOS</h1>
+            
+            <div class="subsection-title">Campos de Texto</div>
+            <div class="element-grid">
+                <div class="element-card">
+                    <div class="element-label">Campo de Texto Normal</div>
+                    <div class="form-group">
+                        <label>Nombre del Producto</label>
+                        <input type="text" placeholder="Ej: Leche Entera 1L">
+                    </div>
+                </div>
+                <div class="element-card">
+                    <div class="element-label">Campo de Texto con Error</div>
+                    <div class="form-group">
+                        <label>Precio</label>
+                        <input type="text" placeholder="Ej: 15.50" style="border-color: var(--secondary);">
+                        <small style="color: var(--secondary);">Este campo es requerido</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="subsection-title">Campos Numéricos</div>
+            <div class="element-grid">
+                <div class="element-card">
+                    <div class="element-label">Campo de Precio</div>
+                    <div class="form-group">
+                        <label>Precio ($)</label>
+                        <input type="number" step="0.01" placeholder="0.00">
+                    </div>
+                </div>
+                <div class="element-card">
+                    <div class="element-label">Campo de Stock</div>
+                    <div class="form-group">
+                        <label>Stock Disponible</label>
+                        <input type="number" placeholder="0">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="subsection-title">Menús Desplegables</div>
+            <div class="element-grid">
+                <div class="element-card">
+                    <div class="element-label">Selección de Categoría</div>
+                    <div class="form-group">
+                        <label>Categoría</label>
+                        <select>
+                            <option value="">Seleccionar categoría</option>
+                            <option value="frutas">🍎 Frutas y Verduras</option>
+                            <option value="lacteos">🥛 Lácteos</option>
+                            <option value="carnes">🥩 Carnes</option>
+                            <option value="panaderia">🍞 Panadería</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="element-card">
+                    <div class="element-label">Método de Pago</div>
+                    <div class="form-group">
+                        <label>Forma de Pago</label>
+                        <select>
+                            <option value="">Seleccionar método</option>
+                            <option value="efectivo">💵 Efectivo</option>
+                            <option value="tarjeta">💳 Tarjeta</option>
+                            <option value="transferencia">🏦 Transferencia</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="subsection-title">Radio Buttons</div>
+            <div class="element-card">
+                <div class="element-label">Método de Entrega</div>
+                <div style="margin: 10px 0;">
+                    <label style="display: flex; align-items: center; margin: 15px 0; padding: 15px; background: var(--bg); border-radius: var(--radius); border: 2px solid var(--primary);">
+                        <div style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--primary); background: var(--primary); display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                            <div style="width: 8px; height: 8px; border-radius: 50%; background: white;"></div>
+                        </div>
+                        <span style="font-size: 1.1rem;">🚚 Entrega a Domicilio</span>
+                    </label>
+                    <label style="display: flex; align-items: center; margin: 15px 0; padding: 15px; background: var(--bg); border-radius: var(--radius); border: 2px solid var(--line);">
+                        <div style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--line); background: white; margin-right: 15px;"></div>
+                        <span style="font-size: 1.1rem;">🏪 Recoger en Tienda</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="subsection-title">Radio Buttons - Modo Eco</div>
+            <div class="element-card">
+                <div class="element-label">Método de Entrega Ecológico</div>
+                <div style="margin: 10px 0;">
+                    <label style="display: flex; align-items: center; margin: 15px 0; padding: 15px; background: #dcfce7; border-radius: var(--radius); border: 2px solid #22c55e;">
+                        <div style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid #22c55e; background: #22c55e; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                            <div style="width: 8px; height: 8px; border-radius: 50%; background: white;"></div>
+                        </div>
+                        <span style="font-size: 1.1rem; color: #16a34a;">🚚 Entrega Ecológica</span>
+                    </label>
+                    <label style="display: flex; align-items: center; margin: 15px 0; padding: 15px; background: #dcfce7; border-radius: var(--radius); border: 2px solid #22c55e;">
+                        <div style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid #22c55e; background: white; margin-right: 15px;"></div>
+                        <span style="font-size: 1.1rem; color: #16a34a;">🏪 Recoger en Tienda</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="subsection-title">Checkboxes</div>
+            <div class="element-card">
+                <div class="element-label">Producto Ecológico</div>
+                <div style="margin: 10px 0;">
+                    <label style="display: flex; align-items: center; padding: 15px; background: var(--bg); border-radius: var(--radius); border: 2px solid var(--line);">
+                        <div style="width: 20px; height: 20px; border-radius: 4px; border: 2px solid var(--line); background: white; margin-right: 15px;"></div>
+                        <span style="font-size: 1.1rem;">🌱 Producto Ecológico</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="subsection-title">Checkbox - Modo Eco</div>
+            <div class="element-card">
+                <div class="element-label">Producto Ecológico Verde</div>
+                <div style="margin: 10px 0;">
+                    <label style="display: flex; align-items: center; padding: 15px; background: #dcfce7; border-radius: var(--radius); border: 2px solid #22c55e;">
+                        <div style="width: 20px; height: 20px; border-radius: 4px; border: 2px solid #22c55e; background: #22c55e; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                            <span style="color: white; font-size: 14px; font-weight: bold;">✓</span>
+                        </div>
+                        <span style="font-size: 1.1rem; color: #16a34a;">🌱 Producto Ecológico</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="subsection-title">Área de Texto</div>
+            <div class="element-card">
+                <div class="element-label">Descripción del Producto</div>
+                <div class="form-group">
+                    <label>Descripción</label>
+                    <textarea rows="4" placeholder="Describe las características del producto..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- TARJETAS DE PRODUCTOS -->
+        <div class="section">
+            <h1 class="section-title">📦 TARJETAS DE PRODUCTOS</h1>
+            
+            <div class="subsection-title">Tarjeta de Producto Estándar</div>
+            <div class="element-grid">
+                        <div class="product-card">
+                            <div class="product-image">🍎</div>
+                            <div class="product-name">Manzanas Rojas</div>
+                            <div class="product-price">$2.50 /kg</div>
+                            <button class="btn primary" style="margin-top: 10px; padding: 8px 16px; font-size: 12px;">Agregar al Carrito</button>
+                        </div>
+                        <div class="product-card">
+                            <div class="product-image">🥛</div>
+                            <div class="product-name">Leche Entera</div>
+                            <div class="product-price">$1.20 /L</div>
+                            <button class="btn primary" style="margin-top: 10px; padding: 8px 16px; font-size: 12px;">Agregar al Carrito</button>
+                        </div>
+                        <div class="product-card">
+                            <div class="product-image">🍞</div>
+                            <div class="product-name">Pan Integral</div>
+                            <div class="product-price">$0.80 /unidad</div>
+                            <button class="btn primary" style="margin-top: 10px; padding: 8px 16px; font-size: 12px;">Agregar al Carrito</button>
+                        </div>
+            </div>
+            
+            <div class="subsection-title">Tarjeta de Producto Ecológico</div>
+            <div class="element-grid">
+                <div class="product-card" style="border: 2px solid #22c55e;">
+                    <div class="product-image">🌱</div>
+                    <div class="product-name">Tomates Orgánicos</div>
+                    <div class="product-price">$3.50 /kg</div>
+                    <div class="badge" style="background: #22c55e; color: white; margin: 5px 0;">Ecológico</div>
+                    <button class="btn primary" style="margin-top: 10px; padding: 8px 16px; font-size: 12px;">Agregar al Carrito</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- NAVEGACIÓN -->
+        <div class="section">
+            <h1 class="section-title">🧭 NAVEGACIÓN</h1>
+            
+            <div class="subsection-title">Barra de Navegación Principal</div>
+            <div class="navigation-example">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; align-items: center;">
+                        <div style="width: 40px; height: 40px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 10px;">
+                            <span style="color: white; font-size: 1.2rem;">🛒</span>
+                        </div>
+                        <div>
+                            <div style="font-size: 1.3rem; font-weight: bold; color: var(--primary); font-family: 'Inter', sans-serif;">EcoMarket</div>
+                            <div style="font-size: 0.8rem; color: var(--muted);">Delivery Express</div>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="nav-item">🏠 Inicio</span>
+                        <span class="nav-item">🛒 Carrito (3)</span>
+                        <span class="nav-item">👤 Perfil</span>
+                        <span class="nav-item active">⚙️ Admin</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="subsection-title">Navegación de Categorías</div>
+            <div class="element-card">
+                <div class="element-label">Filtros de Categoría</div>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin: 15px 0;">
+                    <button class="btn primary">Todas</button>
+                    <button class="btn">🍎 Frutas</button>
+                    <button class="btn">🥛 Lácteos</button>
+                    <button class="btn">🥩 Carnes</button>
+                    <button class="btn">🍞 Panadería</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ALERTAS Y NOTIFICACIONES -->
+        <div class="section">
+            <h1 class="section-title">🔔 ALERTAS Y NOTIFICACIONES</h1>
+            
+            <div class="subsection-title">Tipos de Alertas</div>
+            <div class="alert alert-success">
+                ✅ <strong>Éxito:</strong> Producto agregado al carrito correctamente.
+            </div>
+            <div class="alert alert-warning">
+                ⚠️ <strong>Advertencia:</strong> Stock bajo en este producto.
+            </div>
+            <div class="alert alert-error">
+                ❌ <strong>Error:</strong> No se pudo procesar el pedido.
+            </div>
+            
+            <div class="subsection-title">Badges de Estado</div>
+            <div style="margin: 20px 0;">
+                <span class="badge badge-success">En Stock</span>
+                <span class="badge badge-warning">Stock Bajo</span>
+                <span class="badge badge-danger">Sin Stock</span>
+                <span class="badge" style="background: #22c55e; color: white;">Ecológico</span>
+            </div>
+        </div>
+
+        <!-- ESTADÍSTICAS Y MÉTRICAS -->
+        <div class="section">
+            <h1 class="section-title">📊 ESTADÍSTICAS Y MÉTRICAS</h1>
+            
+            <div class="subsection-title">Tarjetas de Estadísticas</div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">1,247</div>
+                    <div class="stat-label">Productos Vendidos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">$15,420</div>
+                    <div class="stat-label">Ingresos Totales</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">89</div>
+                    <div class="stat-label">Pedidos Completados</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">47</div>
+                    <div class="stat-label">Productos en Stock</div>
+                </div>
+            </div>
+            
+            <div class="subsection-title">Barras de Progreso</div>
+            <div class="element-card">
+                <div class="element-label">Stock de Productos</div>
+                <div style="margin: 10px 0;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                        <span>Manzanas Rojas</span>
+                        <span>85%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 85%;"></div>
+                    </div>
+                </div>
+                <div style="margin: 10px 0;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                        <span>Leche Entera</span>
+                        <span>45%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 45%; background: #f39c12;"></div>
+                    </div>
+                </div>
+                <div style="margin: 10px 0;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                        <span>Pan Integral</span>
+                        <span>15%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 15%; background: var(--secondary);"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODALES -->
+        <div class="section">
+            <h1 class="section-title">🪟 MODALES</h1>
+            
+            <div class="subsection-title">Modal de Confirmación</div>
+            <div class="mockup-section">
+                <div class="mockup-header">Confirmar Acción</div>
+                <div class="mockup-content">
+                    <div class="modal-header">¿Eliminar Producto?</div>
+                    <p>¿Estás seguro de que deseas eliminar este producto? Esta acción no se puede deshacer.</p>
+                    <div class="modal-footer">
+                        <button class="btn" style="margin-right: 10px;">Cancelar</button>
+                        <button class="btn" style="background: var(--secondary); color: white; border-color: var(--secondary);">Eliminar</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="subsection-title">Modal de Información</div>
+            <div class="mockup-section">
+                <div class="mockup-header">Información del Producto</div>
+                <div class="mockup-content">
+                    <div class="modal-header">Detalles del Producto</div>
+                    <div style="display: flex; gap: 20px;">
+                        <div style="flex: 1;">
+                            <div style="width: 120px; height: 120px; background: var(--bg); border-radius: var(--radius); display: flex; align-items: center; justify-content: center; margin-bottom: 15px; border: 1px solid var(--line);">
+                                <span style="font-size: 4rem;">🍎</span>
+                            </div>
+                        </div>
+                        <div style="flex: 2;">
+                            <h3 style="margin: 0 0 10px 0;">Manzanas Rojas</h3>
+                            <p style="margin: 0 0 10px 0;"><strong>Precio:</strong> $2.50 /kg</p>
+                            <p style="margin: 0 0 10px 0;"><strong>Stock:</strong> 85 unidades</p>
+                            <p style="margin: 0 0 10px 0;"><strong>Categoría:</strong> Frutas y Verduras</p>
+                            <span class="badge badge-success">En Stock</span>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn primary">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TABLAS -->
+        <div class="section">
+            <h1 class="section-title">📋 TABLAS</h1>
+            
+            <div class="subsection-title">Tabla de Productos</div>
+            <div class="element-card">
+                <div class="element-label">Lista de Productos</div>
+                <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+                    <thead>
+                        <tr style="background: var(--bg);">
+                            <th style="padding: 12px; text-align: left; border-bottom: 2px solid var(--line);">Producto</th>
+                            <th style="padding: 12px; text-align: left; border-bottom: 2px solid var(--line);">Precio</th>
+                            <th style="padding: 12px; text-align: left; border-bottom: 2px solid var(--line);">Stock</th>
+                            <th style="padding: 12px; text-align: left; border-bottom: 2px solid var(--line);">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 12px; border-bottom: 1px solid var(--line);">
+                                <div style="display: flex; align-items: center;">
+                                    <span style="font-size: 1.5rem; margin-right: 10px;">🍎</span>
+                                    Manzanas Rojas
+                                </div>
+                            </td>
+                            <td style="padding: 12px; border-bottom: 1px solid var(--line);">$2.50</td>
+                            <td style="padding: 12px; border-bottom: 1px solid var(--line);">
+                                <span class="badge badge-success">85</span>
+                            </td>
+                            <td style="padding: 12px; border-bottom: 1px solid var(--line);">
+                                <button class="btn" style="margin-right: 5px; padding: 6px 12px; font-size: 12px;">✏️</button>
+                                <button class="btn" style="background: var(--secondary); color: white; border-color: var(--secondary); padding: 6px 12px; font-size: 12px;">🗑️</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; border-bottom: 1px solid var(--line);">
+                                <div style="display: flex; align-items: center;">
+                                    <span style="font-size: 1.5rem; margin-right: 10px;">🥛</span>
+                                    Leche Entera
+                                </div>
+                            </td>
+                            <td style="padding: 12px; border-bottom: 1px solid var(--line);">$1.20</td>
+                            <td style="padding: 12px; border-bottom: 1px solid var(--line);">
+                                <span class="badge badge-warning">12</span>
+                            </td>
+                            <td style="padding: 12px; border-bottom: 1px solid var(--line);">
+                                <button class="btn" style="margin-right: 5px; padding: 6px 12px; font-size: 12px;">✏️</button>
+                                <button class="btn" style="background: var(--secondary); color: white; border-color: var(--secondary); padding: 6px 12px; font-size: 12px;">🗑️</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- PÁGINAS COMPLETAS -->
+        <div class="section page-break">
+            <h1 class="section-title">📱 PÁGINAS COMPLETAS</h1>
+            
+            <div class="subsection-title">Página Principal - Usuario</div>
+            <div class="mockup-section">
+                <div class="mockup-header">Vista Principal de EcoMarket</div>
+                <div class="mockup-content">
+                    <!-- Header -->
+                    <div style="background: var(--card); color: var(--text); padding: 15px; margin: -20px -20px 20px -20px; border-bottom: 2px solid var(--line);">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="display: flex; align-items: center;">
+                                <div style="width: 40px; height: 40px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 10px;">
+                                    <span style="color: white; font-size: 1.2rem;">🛒</span>
+                                </div>
+                                <div>
+                                    <div style="font-size: 1.3rem; font-weight: bold; color: var(--primary); font-family: 'Inter', sans-serif;">EcoMarket</div>
+                                    <div style="font-size: 0.8rem; color: var(--muted);">Delivery Express</div>
+                                </div>
+                            </div>
+                            <div>
+                                <span style="margin: 0 10px; padding: 8px 15px; background: var(--bg); border-radius: var(--radius); border: 2px solid var(--line);">🏠 Inicio</span>
+                                <span style="margin: 0 10px; padding: 8px 15px; background: var(--primary); color: white; border-radius: var(--radius);">🛒 Carrito (3)</span>
+                                <span style="margin: 0 10px; padding: 8px 15px; background: var(--bg); border-radius: var(--radius); border: 2px solid var(--line);">👤 Perfil</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Categorías -->
+                    <div style="margin-bottom: 20px;">
+                        <h3 style="margin-bottom: 15px;">Categorías</h3>
+                        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                            <button class="btn primary">Todas</button>
+                            <button class="btn">🍎 Frutas</button>
+                            <button class="btn">🥛 Lácteos</button>
+                            <button class="btn">🥩 Carnes</button>
+                            <button class="btn">🍞 Panadería</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Productos -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                        <div class="product-card">
+                            <div class="product-image">🍎</div>
+                            <div class="product-name">Manzanas Rojas</div>
+                            <div class="product-price">$2.50 /kg</div>
+                            <button class="btn primary" style="margin-top: 10px; padding: 8px 16px; font-size: 12px;">Agregar al Carrito</button>
+                        </div>
+                        <div class="product-card">
+                            <div class="product-image">🥛</div>
+                            <div class="product-name">Leche Entera</div>
+                            <div class="product-price">$1.20 /L</div>
+                            <button class="btn primary" style="margin-top: 10px; padding: 8px 16px; font-size: 12px;">Agregar al Carrito</button>
+                        </div>
+                        <div class="product-card">
+                            <div class="product-image">🍞</div>
+                            <div class="product-name">Pan Integral</div>
+                            <div class="product-price">$0.80 /unidad</div>
+                            <button class="btn primary" style="margin-top: 10px; padding: 8px 16px; font-size: 12px;">Agregar al Carrito</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section page-break">
+            <div class="subsection-title">Panel de Administración</div>
+            <div class="mockup-section">
+                <div class="mockup-header">Panel de Administración</div>
+                <div class="mockup-content">
+                    <!-- Header Admin -->
+                    <div style="background: var(--primary); color: white; padding: 15px; margin: -20px -20px 20px -20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="font-size: 1.5rem; font-weight: bold;">⚙️ ADMINISTRACIÓN</div>
+                            <div>
+                                <span style="margin: 0 10px; padding: 8px 15px; background: rgba(255,255,255,0.2); border-radius: var(--radius);">📊 Estadísticas</span>
+                                <span style="margin: 0 10px; padding: 8px 15px; background: rgba(255,255,255,0.2); border-radius: var(--radius);">📦 Productos</span>
+                                <span style="margin: 0 10px; padding: 8px 15px; background: rgba(255,255,255,0.2); border-radius: var(--radius);">📋 Pedidos</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Estadísticas -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number">1,247</div>
+                            <div class="stat-label">Productos Vendidos</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">$15,420</div>
+                            <div class="stat-label">Ingresos Totales</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">89</div>
+                            <div class="stat-label">Pedidos Completados</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">47</div>
+                            <div class="stat-label">Productos en Stock</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Resumen de Stock -->
+                    <div style="margin: 20px 0;">
+                        <h3>Resumen de Stock</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+                            <div style="background: var(--secondary); color: white; padding: 15px; border-radius: var(--radius-lg); text-align: center;">
+                                <div style="font-size: 1.5rem; font-weight: bold;">3</div>
+                                <div style="font-size: 0.9rem;">Sin Stock</div>
+                            </div>
+                            <div style="background: #f39c12; color: white; padding: 15px; border-radius: var(--radius-lg); text-align: center;">
+                                <div style="font-size: 1.5rem; font-weight: bold;">8</div>
+                                <div style="font-size: 0.9rem;">Stock Bajo</div>
+                            </div>
+                            <div style="background: var(--primary); color: white; padding: 15px; border-radius: var(--radius-lg); text-align: center;">
+                                <div style="font-size: 1.5rem; font-weight: bold;">36</div>
+                                <div style="font-size: 0.9rem;">Stock Normal</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section page-break">
+            <div class="subsection-title">Proceso de Checkout - Paso 1: Dirección</div>
+            <div class="mockup-section">
+                <div class="mockup-header">Proceso de Compra - Paso 1: Dirección de Envío</div>
+                <div class="mockup-content">
+                    <!-- Header con navegación -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                        <a href="#" style="color: var(--primary); text-decoration: none; font-weight: 600;">← Volver</a>
+                        <div style="display: flex; align-items: center; gap: 20px;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="width: 30px; height: 30px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">1</div>
+                                <span style="color: var(--text); font-weight: 600;">Dirección</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="width: 30px; height: 30px; background: var(--line); color: var(--muted); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">2</div>
+                                <span style="color: var(--muted);">Entrega</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="width: 30px; height: 30px; background: var(--line); color: var(--muted); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">3</div>
+                                <span style="color: var(--muted);">Pago</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                        <!-- Formulario de Dirección -->
+                        <div>
+                            <div style="background: var(--card); padding: 25px; border-radius: var(--radius-lg); border: 2px solid var(--line);">
+                                <h3 style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                                    <span style="font-size: 1.2rem;">📍</span>
+                                    Dirección de Envío
+                                </h3>
+                                
+                                <div class="form-group">
+                                    <label>Nombre</label>
+                                    <input type="text" placeholder="Primer Nombre">
+                                </div>
+                                <div class="form-group">
+                                    <label>Apellido</label>
+                                    <input type="text" placeholder="Primer Apellido">
+                                </div>
+                                <div class="form-group">
+                                    <label>Dirección</label>
+                                    <input type="text" placeholder="Direccion del Usuario">
+                                </div>
+                                <div class="form-group">
+                                    <label>Ciudad</label>
+                                    <input type="text" placeholder="Ciudad del Usuario">
+                                </div>
+                                <div class="form-group">
+                                    <label>Código Postal</label>
+                                    <input type="text" placeholder="XXXXXX">
+                                </div>
+                                <div class="form-group">
+                                    <label>Número de Teléfono</label>
+                                    <input type="tel" placeholder="3000000000" style="border-color: var(--primary);">
+                                </div>
+                                
+                                <div style="display: flex; justify-content: space-between; margin-top: 25px;">
+                                    <button class="btn" style="background: var(--bg); color: var(--text); border-color: var(--line);">Volver al Carrito</button>
+                                    <button class="btn primary">Continuar</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Resumen del Pedido -->
+                        <div>
+                            <div style="background: var(--card); padding: 25px; border-radius: var(--radius-lg); border: 2px solid var(--line);">
+                                <h3 style="margin-bottom: 20px;">Resumen del Pedido</h3>
+                                
+                                <div style="margin-bottom: 20px;">
+                                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                                        <div style="width: 60px; height: 60px; background: #e3f2fd; border-radius: var(--radius); display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">💊</div>
+                                        <div style="flex: 1;">
+                                            <div style="font-weight: 600;">Paracetamol 500mg</div>
+                                            <div style="font-size: 0.9rem; color: var(--muted);">Cantidad: 1</div>
+                                        </div>
+                                        <div style="font-weight: bold; color: var(--primary);">3,99 US$</div>
+                                    </div>
+                                    
+                                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                                        <div style="width: 60px; height: 60px; background: #fff3e0; border-radius: var(--radius); display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">🍊</div>
+                                        <div style="flex: 1;">
+                                            <div style="font-weight: 600;">Vitamina C</div>
+                                            <div style="font-size: 0.9rem; color: var(--muted);">Cantidad: 1</div>
+                                        </div>
+                                        <div style="font-weight: bold; color: var(--primary);">12,99 US$</div>
+                                    </div>
+                                </div>
+                                
+                                <hr style="margin: 20px 0; border-color: var(--line);">
+                                
+                                <div style="margin-bottom: 10px;">
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <span>Subtotal</span>
+                                        <span>16,98 US$</span>
+                                    </div>
+                                </div>
+                                <div style="margin-bottom: 10px;">
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <span>Impuesto</span>
+                                        <span>1,36 US$</span>
+                                    </div>
+                                </div>
+                                <div style="margin-bottom: 10px;">
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <span>Envío</span>
+                                        <span>4,99 US$</span>
+                                    </div>
+                                </div>
+                                
+                                <hr style="margin: 15px 0; border-color: var(--line);">
+                                
+                                <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 1.2rem; color: var(--primary);">
+                                    <span>Total</span>
+                                    <span>23,33 US$</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section page-break">
+            <div class="subsection-title">Proceso de Checkout - Paso 2: Entrega</div>
+            <div class="mockup-section">
+                <div class="mockup-header">Proceso de Compra - Paso 2: Método de Entrega</div>
+                <div class="mockup-content">
+                    <!-- Header con navegación -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                        <a href="#" style="color: var(--primary); text-decoration: none; font-weight: 600;">← Volver</a>
+                        <div style="display: flex; align-items: center; gap: 20px;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="width: 30px; height: 30px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">✓</div>
+                                <span style="color: var(--primary); font-weight: 600;">Dirección</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="width: 30px; height: 30px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">2</div>
+                                <span style="color: var(--text); font-weight: 600;">Entrega</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="width: 30px; height: 30px; background: var(--line); color: var(--muted); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">3</div>
+                                <span style="color: var(--muted);">Pago</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                        <!-- Método de Entrega -->
+                        <div>
+                            <div style="background: var(--card); padding: 25px; border-radius: var(--radius-lg); border: 2px solid var(--line);">
+                                <h3 style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                                    <span style="font-size: 1.2rem;">🚚</span>
+                                    Método de Entrega
+                                </h3>
+                                
+                                <div style="margin: 15px 0;">
+                                    <label style="display: flex; align-items: center; margin: 15px 0; padding: 20px; background: var(--bg); border-radius: var(--radius); border: 2px solid var(--line);">
+                                        <div style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--line); background: white; margin-right: 15px;"></div>
+                                        <div style="flex: 1;">
+                                            <div style="font-size: 1.1rem; font-weight: bold;">Entrega Express</div>
+                                            <div style="font-size: 0.9rem; color: var(--muted);">1-2 horas</div>
+                                        </div>
+                                        <div style="font-weight: bold; color: var(--primary);">$9.99</div>
+                                    </label>
+                                    
+                                    <label style="display: flex; align-items: center; margin: 15px 0; padding: 20px; background: #dcfce7; border-radius: var(--radius); border: 2px solid var(--primary);">
+                                        <div style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--primary); background: var(--primary); display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                            <div style="width: 8px; height: 8px; border-radius: 50%; background: white;"></div>
+                                        </div>
+                                        <div style="flex: 1;">
+                                            <div style="font-size: 1.1rem; font-weight: bold;">Entrega Estándar</div>
+                                            <div style="font-size: 0.9rem; color: var(--muted);">Mismo día</div>
+                                        </div>
+                                        <div style="font-weight: bold; color: var(--primary);">$4.99</div>
+                                    </label>
+                                    
+                                    <label style="display: flex; align-items: center; margin: 15px 0; padding: 20px; background: var(--bg); border-radius: var(--radius); border: 2px solid var(--line);">
+                                        <div style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--line); background: white; margin-right: 15px;"></div>
+                                        <div style="flex: 1;">
+                                            <div style="font-size: 1.1rem; font-weight: bold;">Recoger en Tienda</div>
+                                            <div style="font-size: 0.9rem; color: var(--muted);">Recoger en 2 horas</div>
+                                        </div>
+                                        <div style="font-weight: bold; color: #22c55e;">GRATIS</div>
+                                    </label>
+                                </div>
+                                
+                                <div style="display: flex; justify-content: space-between; margin-top: 25px;">
+                                    <button class="btn" style="background: var(--bg); color: var(--text); border-color: var(--line);">Anterior</button>
+                                    <button class="btn primary">Continuar</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Resumen del Pedido (igual que el paso anterior) -->
+                        <div>
+                            <div style="background: var(--card); padding: 25px; border-radius: var(--radius-lg); border: 2px solid var(--line);">
+                                <h3 style="margin-bottom: 20px;">Resumen del Pedido</h3>
+                                
+                                <div style="margin-bottom: 20px;">
+                                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                                        <div style="width: 60px; height: 60px; background: #e3f2fd; border-radius: var(--radius); display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">💊</div>
+                                        <div style="flex: 1;">
+                                            <div style="font-weight: 600;">Paracetamol 500mg</div>
+                                            <div style="font-size: 0.9rem; color: var(--muted);">Cantidad: 1</div>
+                                        </div>
+                                        <div style="font-weight: bold; color: var(--primary);">3,99 US$</div>
+                                    </div>
+                                    
+                                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                                        <div style="width: 60px; height: 60px; background: #fff3e0; border-radius: var(--radius); display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">🍊</div>
+                                        <div style="flex: 1;">
+                                            <div style="font-weight: 600;">Vitamina C</div>
+                                            <div style="font-size: 0.9rem; color: var(--muted);">Cantidad: 1</div>
+                                        </div>
+                                        <div style="font-weight: bold; color: var(--primary);">12,99 US$</div>
+                                    </div>
+                                </div>
+                                
+                                <hr style="margin: 20px 0; border-color: var(--line);">
+                                
+                                <div style="margin-bottom: 10px;">
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <span>Subtotal</span>
+                                        <span>16,98 US$</span>
+                                    </div>
+                                </div>
+                                <div style="margin-bottom: 10px;">
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <span>Impuesto</span>
+                                        <span>1,36 US$</span>
+                                    </div>
+                                </div>
+                                <div style="margin-bottom: 10px;">
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <span>Envío</span>
+                                        <span>4,99 US$</span>
+                                    </div>
+                                </div>
+                                
+                                <hr style="margin: 15px 0; border-color: var(--line);">
+                                
+                                <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 1.2rem; color: var(--primary);">
+                                    <span>Total</span>
+                                    <span>23,33 US$</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section page-break">
+            <div class="subsection-title">Proceso de Checkout - Paso 3: Pago</div>
+            <div class="mockup-section">
+                <div class="mockup-header">Proceso de Compra - Paso 3: Método de Pago</div>
+                <div class="mockup-content">
+                    <!-- Header con navegación -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                        <a href="#" style="color: var(--primary); text-decoration: none; font-weight: 600;">← Volver</a>
+                        <div style="display: flex; align-items: center; gap: 20px;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="width: 30px; height: 30px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">✓</div>
+                                <span style="color: var(--primary); font-weight: 600;">Dirección</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="width: 30px; height: 30px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">✓</div>
+                                <span style="color: var(--primary); font-weight: 600;">Entrega</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="width: 30px; height: 30px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">3</div>
+                                <span style="color: var(--text); font-weight: 600;">Pago</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                        <!-- Método de Pago -->
+                        <div>
+                            <div style="background: var(--card); padding: 25px; border-radius: var(--radius-lg); border: 2px solid var(--line);">
+                                <h3 style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                                    <span style="font-size: 1.2rem;">💳</span>
+                                    Método de Pago
+                                </h3>
+                                
+                                <!-- Opciones de Pago -->
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px;">
+                                    <label style="display: flex; align-items: center; padding: 20px; background: #dcfce7; border-radius: var(--radius); border: 2px solid var(--primary); cursor: pointer;">
+                                        <div style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--primary); background: var(--primary); display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                            <div style="width: 8px; height: 8px; border-radius: 50%; background: white;"></div>
+                                        </div>
+                                        <div style="display: flex; align-items: center; gap: 10px;">
+                                            <span style="font-size: 1.2rem;">💳</span>
+                                            <span style="font-weight: bold;">Tarjeta de Crédito</span>
+                                        </div>
+                                    </label>
+                                    
+                                    <label style="display: flex; align-items: center; padding: 20px; background: var(--bg); border-radius: var(--radius); border: 2px solid var(--line); cursor: pointer;">
+                                        <div style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--line); background: white; margin-right: 15px;"></div>
+                                        <div style="display: flex; align-items: center; gap: 10px;">
+                                            <span style="font-size: 1.2rem;">💰</span>
+                                            <span style="font-weight: bold;">Contra Entrega</span>
+                                        </div>
+                                    </label>
+                                </div>
+                                
+                                <!-- Formulario de Tarjeta -->
+                                <div style="margin-bottom: 25px;">
+                                    <div class="form-group">
+                                        <label>Número de Tarjeta</label>
+                                        <input type="text" placeholder="1234 5678 9012 3456">
+                                    </div>
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                                        <div class="form-group">
+                                            <label>Fecha de Vencimiento</label>
+                                            <input type="text" placeholder="MM/AA">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>CVV</label>
+                                            <input type="text" placeholder="123">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Nombre en la Tarjeta</label>
+                                        <input type="text" placeholder="Juan Pérez">
+                                    </div>
+                                </div>
+                                
+                                <div style="display: flex; justify-content: space-between;">
+                                    <button class="btn" style="background: var(--bg); color: var(--text); border-color: var(--line);">Anterior</button>
+                                    <button class="btn primary" style="padding: 15px 30px; font-size: 1.1rem;">Finalizar Pedido</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Resumen del Pedido (igual que los pasos anteriores) -->
+                        <div>
+                            <div style="background: var(--card); padding: 25px; border-radius: var(--radius-lg); border: 2px solid var(--line);">
+                                <h3 style="margin-bottom: 20px;">Resumen del Pedido</h3>
+                                
+                                <div style="margin-bottom: 20px;">
+                                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                                        <div style="width: 60px; height: 60px; background: #e3f2fd; border-radius: var(--radius); display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">💊</div>
+                                        <div style="flex: 1;">
+                                            <div style="font-weight: 600;">Paracetamol 500mg</div>
+                                            <div style="font-size: 0.9rem; color: var(--muted);">Cantidad: 1</div>
+                                        </div>
+                                        <div style="font-weight: bold; color: var(--primary);">3,99 US$</div>
+                                    </div>
+                                    
+                                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                                        <div style="width: 60px; height: 60px; background: #fff3e0; border-radius: var(--radius); display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">🍊</div>
+                                        <div style="flex: 1;">
+                                            <div style="font-weight: 600;">Vitamina C</div>
+                                            <div style="font-size: 0.9rem; color: var(--muted);">Cantidad: 1</div>
+                                        </div>
+                                        <div style="font-weight: bold; color: var(--primary);">12,99 US$</div>
+                                    </div>
+                                </div>
+                                
+                                <hr style="margin: 20px 0; border-color: var(--line);">
+                                
+                                <div style="margin-bottom: 10px;">
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <span>Subtotal</span>
+                                        <span>16,98 US$</span>
+                                    </div>
+                                </div>
+                                <div style="margin-bottom: 10px;">
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <span>Impuesto</span>
+                                        <span>1,36 US$</span>
+                                    </div>
+                                </div>
+                                <div style="margin-bottom: 10px;">
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <span>Envío</span>
+                                        <span>4,99 US$</span>
+                                    </div>
+                                </div>
+                                
+                                <hr style="margin: 15px 0; border-color: var(--line);">
+                                
+                                <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 1.2rem; color: var(--primary);">
+                                    <span>Total</span>
+                                    <span>23,33 US$</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- INSTRUCCIONES DE USO -->
+        <div class="section">
+            <h1 class="section-title">📖 INSTRUCCIONES DE USO</h1>
+            
+            <div class="subsection-title">Cómo Usar Este Documento</div>
+            <div class="element-card">
+                <h4>Para Capturas de Pantalla:</h4>
+                <ol>
+                    <li>Abre este archivo en tu navegador</li>
+                    <li>Usa las herramientas de desarrollador (F12) para ajustar el zoom</li>
+                    <li>Toma capturas de cada sección individualmente</li>
+                    <li>Las secciones están separadas con <code>page-break</code> para impresión</li>
+                </ol>
+                
+                <h4>Para PDF:</h4>
+                <ol>
+                    <li>Presiona Ctrl+P (Cmd+P en Mac)</li>
+                    <li>Selecciona "Guardar como PDF"</li>
+                    <li>Configura márgenes mínimos</li>
+                    <li>Las páginas se separarán automáticamente</li>
+                </ol>
+                
+                <h4>Elementos Incluidos:</h4>
+                <ul>
+                    <li>✅ Logotipos y variaciones</li>
+                    <li>✅ Paleta cromática completa</li>
+                    <li>✅ Jerarquía tipográfica</li>
+                    <li>✅ Iconografía completa</li>
+                    <li>✅ Botones y estados</li>
+                    <li>✅ Formularios y controles</li>
+                    <li>✅ Tarjetas de productos</li>
+                    <li>✅ Navegación</li>
+                    <li>✅ Alertas y notificaciones</li>
+                    <li>✅ Estadísticas y métricas</li>
+                    <li>✅ Modales</li>
+                    <li>✅ Tablas</li>
+                    <li>✅ Páginas completas</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

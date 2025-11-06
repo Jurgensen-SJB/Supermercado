@@ -1,0 +1,1242 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mi Perfil - EcoMarket</title>
+  <link rel="icon" type="image/png" href="/assets/img/carritologo.png">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header class="header-app">
+    <div class="container">
+      <div class="header-row">
+        <div class="logo">
+          <div class="logo-icon">
+            <img src="/assets/img/carritologo.png" alt="SuperMercado Logo" class="logo-img">
+          </div>
+          <div class="logo-text">
+            <div class="title">EcoMarket</div>
+            <div class="subtitle">Delivery Express</div>
+          </div>
+        </div>
+        <div class="search-placeholder"></div>
+        <nav class="icons">
+          <a class="icon" href="/" title="Inicio">🏠</a>
+          <a class="icon" id="themeToggle" title="Modo Nocturno">🌙</a>
+          <a class="icon" id="ecoToggle" title="Modo Ecológico">🌱</a>
+          <a class="icon admin-link hidden" href="/views/admin.html" title="Admin">🛠️</a>
+          <a class="icon" id="cartIcon" title="Carrito">🛍️ <span id="cartCount">0</span></a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="profile-hero">
+      <div class="profile-avatar">
+        <div class="avatar-circle">👤</div>
+      </div>
+      <div class="profile-info">
+        <h1 id="userName">Usuario</h1>
+        <p id="userEmail">usuario@ejemplo.com</p>
+        <div class="profile-stats">
+          <div class="stat-item">
+            <span class="stat-number" id="totalOrders">0</span>
+            <span class="stat-label">Pedidos</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number" id="totalSpent">$0</span>
+            <span class="stat-label">Gastado</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number" id="avgOrder">$0</span>
+            <span class="stat-label">Promedio</span>
+          </div>
+        </div>
+        
+        <div class="profile-actions">
+          <button class="logout-btn" id="profileLogoutBtn">
+            <span class="logout-icon">🚪</span>
+            <span class="logout-text">Cerrar Sesión</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <div class="profile-tabs">
+      <button class="profile-tab active" id="historyTab">📋 Historial</button>
+      <button class="profile-tab" id="statsTab">📊 Estadísticas</button>
+      <button class="profile-tab" id="expensesTab">💰 Gastos</button>
+      <button class="profile-tab admin-tab hidden" id="adminStatsTab">🛠️ Admin Stats</button>
+    </div>
+
+    <!-- Historial de Compras -->
+    <section id="historySection" class="profile-section">
+      <div class="section-header">
+        <h2>Historial de Compras</h2>
+        <div class="section-icon">📋</div>
+      </div>
+      <div id="ordersList" class="orders-list">
+        <!-- Las órdenes se cargarán aquí -->
+      </div>
+    </section>
+
+    <!-- Estadísticas -->
+    <section id="statsSection" class="profile-section hidden">
+      <div class="section-header">
+        <h2>Estadísticas de Compras</h2>
+        <div class="section-icon">📊</div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">📦</div>
+          <div class="stat-content">
+            <h3>Total de Pedidos</h3>
+            <p id="totalOrdersCount">0</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">💰</div>
+          <div class="stat-content">
+            <h3>Total Gastado</h3>
+            <p id="totalSpentAmount">$0.00</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📊</div>
+          <div class="stat-content">
+            <h3>Promedio por Pedido</h3>
+            <p id="avgOrderValue">$0.00</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📅</div>
+          <div class="stat-content">
+            <h3>Último Pedido</h3>
+            <p id="lastOrderDate">Nunca</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="stat-icon">📈</div>
+          <div class="stat-content">
+            <h3>Tendencia Mensual</h3>
+            <div id="monthlyChart" class="chart-container">
+              <!-- Gráfico se generará aquí -->
+            </div>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="stat-icon">🥗</div>
+          <div class="stat-content">
+            <h3>Categorías de Productos</h3>
+            <div id="categoryChart" class="circular-chart-container">
+              <!-- Gráfico circular se generará aquí -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Gestor de Gastos -->
+    <section id="expensesSection" class="profile-section hidden">
+      <div class="section-header">
+        <h2>Gestor de Gastos</h2>
+        <div class="section-icon">💰</div>
+      </div>
+      <div class="expenses-grid">
+        <div class="expense-card budget-card">
+          <h3>Presupuesto Mensual</h3>
+          <div class="budget-controls">
+            <input type="number" id="monthlyBudget" placeholder="Presupuesto mensual" min="0" step="0.01">
+            <button class="btn primary" id="setBudget">Establecer</button>
+          </div>
+          <div class="budget-progress">
+            <div class="progress-bar">
+              <div class="progress-fill" id="budgetProgress"></div>
+            </div>
+            <p id="budgetText">Presupuesto no establecido</p>
+          </div>
+        </div>
+        <div class="expense-card analysis-card">
+          <h3>Análisis de Gastos</h3>
+          <div class="expense-analysis">
+            <div class="analysis-item">
+              <span>Gasto promedio por pedido:</span>
+              <span id="avgExpense">$0</span>
+            </div>
+            <div class="analysis-item">
+              <span>Pedidos este mes:</span>
+              <span id="monthlyOrders">0</span>
+            </div>
+            <div class="analysis-item">
+              <span>Gasto total este mes:</span>
+              <span id="monthlyExpense">$0</span>
+            </div>
+          </div>
+        </div>
+        <div class="expense-card recommendations-card">
+          <h3>💡 Recomendaciones</h3>
+          <div id="recommendationsList" class="recommendations-list">
+            <!-- Las recomendaciones se generarán aquí -->
+          </div>
+        </div>
+        <div class="expense-card trends-card">
+          <h3>📈 Tendencias de Gastos</h3>
+          <div class="trends-content">
+            <div class="trend-item">
+              <div class="trend-icon">📊</div>
+              <div class="trend-info">
+                <h4>Proyección Mensual</h4>
+                <p id="monthlyProjection">Basado en tus gastos actuales</p>
+              </div>
+            </div>
+            <div class="trend-item">
+              <div class="trend-icon">🎯</div>
+              <div class="trend-info">
+                <h4>Meta de Ahorro</h4>
+                <p id="savingsGoal">Calculando tu potencial de ahorro</p>
+              </div>
+            </div>
+            <div class="trend-item">
+              <div class="trend-icon">📅</div>
+              <div class="trend-info">
+                <h4>Días Restantes</h4>
+                <p id="daysRemaining">Días hasta fin de mes</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Estadísticas de Administrador -->
+    <section id="adminStatsSection" class="profile-section hidden">
+      <div class="section-header">
+        <h2>Estadísticas de Administrador</h2>
+        <div class="section-icon">🛠️</div>
+      </div>
+      <div class="admin-stats-grid">
+        <div class="admin-stat-card">
+          <div class="stat-icon">💰</div>
+          <div class="stat-content">
+            <h3>Total de Ventas</h3>
+            <p id="adminTotalSales">$0.00</p>
+            <span class="stat-subtitle">Ingresos totales de la tienda</span>
+          </div>
+        </div>
+        <div class="admin-stat-card">
+          <div class="stat-icon">📦</div>
+          <div class="stat-content">
+            <h3>Total de Pedidos</h3>
+            <p id="adminTotalOrders">0</p>
+            <span class="stat-subtitle">Pedidos completados</span>
+          </div>
+        </div>
+        <div class="admin-stat-card">
+          <div class="stat-icon">👥</div>
+          <div class="stat-content">
+            <h3>Clientes Activos</h3>
+            <p id="adminActiveCustomers">0</p>
+            <span class="stat-subtitle">Usuarios con pedidos</span>
+          </div>
+        </div>
+        <div class="admin-stat-card">
+          <div class="stat-icon">📊</div>
+          <div class="stat-content">
+            <h3>Promedio por Pedido</h3>
+            <p id="adminAvgOrder">$0.00</p>
+            <span class="stat-subtitle">Valor promedio</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="admin-charts-grid">
+        <div class="admin-chart-card">
+          <div class="stat-icon">📈</div>
+          <div class="stat-content">
+            <h3>Ventas por Mes</h3>
+            <div id="adminSalesChart" class="chart-container">
+              <!-- Gráfico de ventas se generará aquí -->
+            </div>
+          </div>
+        </div>
+        <div class="admin-chart-card">
+          <div class="stat-icon">🏆</div>
+          <div class="stat-content">
+            <h3>Top Productos</h3>
+            <div id="adminTopProducts" class="top-products-list">
+              <!-- Lista de productos más vendidos -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="container footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <img src="/assets/img/carritologo.png" alt="EcoMarket Logo" class="footer-logo-img">
+          <span class="footer-title">EcoMarket</span>
+        </div>
+        <p class="footer-tagline">🍃 Tu supermercado ecológico de confianza 🌱</p>
+      </div>
+      <div class="footer-info">
+        <p class="footer-copyright">© 2025 EcoMarket · Delivery Express</p>
+        <p class="footer-mission">Comprometidos con el medio ambiente y tu bienestar</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/app.js"></script>
+  <script>
+    // Script específico para la página de perfil
+    document.addEventListener('DOMContentLoaded', function() {
+      // Cargar datos del usuario
+      loadUserProfile();
+      
+      // Inicializar modo oscuro y eco
+      initializeThemes();
+      
+      // Inicializar carrito
+      initializeCart();
+      
+      // Event listeners para tabs
+      document.getElementById('historyTab').addEventListener('click', () => showSection('history'));
+      document.getElementById('statsTab').addEventListener('click', () => showSection('stats'));
+      document.getElementById('expensesTab').addEventListener('click', () => showSection('expenses'));
+      document.getElementById('adminStatsTab').addEventListener('click', () => showSection('adminStats'));
+      
+      // Event listeners para gestor de gastos
+      document.getElementById('setBudget').addEventListener('click', setMonthlyBudget);
+      
+      // Event listener para logout
+      document.getElementById('profileLogoutBtn').addEventListener('click', () => {
+        if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+          // Limpiar datos de autenticación
+          localStorage.removeItem('super_auth_v1');
+          localStorage.removeItem('currentUserId');
+          alert('Sesión cerrada correctamente');
+          // Redirigir a la página principal
+          window.location.href = '/';
+        }
+      });
+      
+      // Cargar presupuesto guardado
+      loadBudget();
+    });
+    
+    // Función para inicializar temas
+    function initializeThemes() {
+      // Aplicar tema guardado
+      const savedTheme = localStorage.getItem('super_theme_v1') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      
+      const savedEco = localStorage.getItem('super_eco_v1') === 'true';
+      document.documentElement.setAttribute('data-eco', savedEco);
+      
+      // Event listeners para toggles
+      document.getElementById('themeToggle')?.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('super_theme_v1', newTheme);
+      });
+      
+      document.getElementById('ecoToggle')?.addEventListener('click', () => {
+        const currentEco = document.documentElement.getAttribute('data-eco') === 'true';
+        const newEco = !currentEco;
+        document.documentElement.setAttribute('data-eco', newEco);
+        localStorage.setItem('super_eco_v1', newEco);
+        updateEcoIconState();
+      });
+      
+      // Inicializar estado del icono eco
+      updateEcoIconState();
+    }
+    
+    // Función para actualizar el estado visual del icono eco
+    function updateEcoIconState() {
+      const ecoIcon = document.getElementById('ecoToggle');
+      if (!ecoIcon) return;
+      
+      const isEcoMode = localStorage.getItem('super_eco_v1') === 'true';
+      
+      if (isEcoMode) {
+        ecoIcon.classList.add('eco-active');
+      } else {
+        ecoIcon.classList.remove('eco-active');
+      }
+    }
+    
+    // Función para inicializar carrito
+    function initializeCart() {
+      // Cargar contador del carrito
+      updateCartBadge();
+      
+      // Event listener para el icono del carrito
+      document.getElementById('cartIcon')?.addEventListener('click', () => {
+        // Redirigir a la página principal con el carrito abierto
+        window.location.href = '/?openCart=true';
+      });
+    }
+    
+    // Función para actualizar el badge del carrito
+    function updateCartBadge() {
+      const badge = document.getElementById('cartCount');
+      if (badge) {
+        try {
+          const cartData = localStorage.getItem('super_cart_v1');
+          if (cartData) {
+            const items = JSON.parse(cartData);
+            const count = items.reduce((total, item) => total + (item.quantity || 0), 0);
+            badge.textContent = count;
+          } else {
+            badge.textContent = '0';
+          }
+        } catch (error) {
+          console.error('Error cargando carrito:', error);
+          badge.textContent = '0';
+        }
+      }
+    }
+    
+    function showSection(section) {
+      // Ocultar todas las secciones
+      document.querySelectorAll('.profile-section').forEach(s => s.classList.add('hidden'));
+      document.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
+      
+      // Mostrar sección seleccionada
+      document.getElementById(section + 'Section').classList.remove('hidden');
+      document.getElementById(section + 'Tab').classList.add('active');
+      
+      // Cargar datos específicos de la sección
+      if (section === 'stats') {
+        loadStats();
+      } else if (section === 'expenses') {
+        loadExpenses();
+      } else if (section === 'adminStats') {
+        loadAdminStats();
+      }
+    }
+    
+    async function loadUserProfile() {
+      const userId = localStorage.getItem('currentUserId');
+      if (!userId) {
+        window.location.href = '/';
+        return;
+      }
+      
+      try {
+        const user = await fetch(`/api/users/${userId}`).then(r => r.json());
+        document.getElementById('userName').textContent = user.name;
+        document.getElementById('userEmail').textContent = user.email;
+        
+        // Cambiar avatar según el tipo de usuario
+        const avatarCircle = document.querySelector('.avatar-circle');
+        if (avatarCircle) {
+          if (user.isAdmin === 1 || user.email === 'admin@supermercado.com') {
+            // Usuario administrador - mostrar admin.png
+            document.getElementById('adminStatsTab').classList.remove('hidden');
+            avatarCircle.innerHTML = '<img src="/assets/img/admin.png" alt="Admin Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">';
+          } else {
+            // Usuario normal - mostrar usern.png
+            avatarCircle.innerHTML = '<img src="/assets/img/usern.png" alt="User Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">';
+          }
+        }
+        
+        // Cargar estadísticas básicas
+        const stats = await fetch(`/api/orders/${userId}/stats`).then(r => r.json());
+        document.getElementById('totalOrders').textContent = stats.total_orders || 0;
+        document.getElementById('totalSpent').textContent = '$' + (stats.total_spent || 0).toFixed(2);
+        document.getElementById('avgOrder').textContent = '$' + (stats.avg_order_value || 0).toFixed(2);
+        document.getElementById('lastOrderDate').textContent = stats.last_order_date ? 
+          new Date(stats.last_order_date).toLocaleDateString() : 'Nunca';
+        
+        // Cargar historial
+        loadOrderHistory(userId);
+      } catch (error) {
+        console.error('Error cargando perfil:', error);
+      }
+    }
+    
+    async function loadOrderHistory(userId) {
+      try {
+        const orders = await fetch(`/api/orders/${userId}`).then(r => r.json());
+        const ordersList = document.getElementById('ordersList');
+        
+        if (!orders || orders.length === 0) {
+          ordersList.innerHTML = '<div class="empty-state">No tienes pedidos aún</div>';
+          return;
+        }
+        
+        ordersList.innerHTML = orders.map(order => {
+          const orderDate = new Date(order.created_at);
+          const formattedDate = orderDate.toLocaleDateString('es-ES', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          });
+          
+          // Calcular cantidad de productos
+          let itemsCount = 0;
+          let itemsSummary = '';
+          
+          if (order.items_summary) {
+            // Usar el resumen si está disponible
+            itemsSummary = order.items_summary;
+            // Contar productos del resumen
+            itemsCount = (order.items_summary.match(/x\d+/g) || []).reduce((total, match) => {
+              return total + parseInt(match.replace('x', ''));
+            }, 0);
+          } else if (order.items) {
+            // Parsear JSON si está disponible
+            try {
+              const items = JSON.parse(order.items);
+              itemsCount = items.reduce((total, item) => total + item.quantity, 0);
+              itemsSummary = items.map(item => `${item.name} x${item.quantity}`).join(', ');
+            } catch (e) {
+              itemsCount = 0;
+              itemsSummary = 'Productos no disponibles';
+            }
+          }
+          
+          // Información de pago y entrega
+          const paymentMethod = order.payment_method || 'card';
+          const deliveryMethod = order.delivery_method || 'standard';
+          const shippingCost = order.shipping_cost || 4.99;
+          
+          // Calcular subtotal (total - shipping - tax)
+          const tax = (order.total - shippingCost) * 0.08 / 1.08; // Impuesto aproximado
+          const subtotal = order.total - shippingCost - tax;
+          
+          // Iconos para métodos de pago y entrega
+          const paymentIcon = paymentMethod === 'card' ? '💳' : '💵';
+          const deliveryIcon = deliveryMethod === 'express' ? '⚡' : 
+                             deliveryMethod === 'pickup' ? '🏪' : '🚚';
+          
+          const paymentText = paymentMethod === 'card' ? 'Tarjeta' : 'Contra Entrega';
+          const deliveryText = deliveryMethod === 'express' ? 'Express (1-2h)' :
+                             deliveryMethod === 'pickup' ? 'Recoger en Tienda' : 'Estándar';
+          
+          return `
+            <div class="order-card">
+              <div class="order-header">
+                <div class="order-id-section">
+                  <span class="order-id">Pedido #${order.id}</span>
+                  <span class="order-status ${order.status === 'completed' ? 'completed' : 'pending'}">
+                    ${order.status === 'completed' ? '✅ Completado' : '⏳ ' + order.status}
+                  </span>
+                </div>
+                <div class="order-actions">
+                  <button class="delete-order-btn" onclick="deleteOrder(${order.id})" title="Eliminar pedido">
+                    🗑️
+                  </button>
+                  <div class="order-date">${formattedDate}</div>
+                </div>
+              </div>
+              
+              <div class="order-content">
+                <div class="order-items-info">
+                  <div class="items-count">${itemsCount} productos</div>
+                  <div class="items-summary">${itemsSummary}</div>
+                </div>
+                
+                <div class="order-methods">
+                  <div class="method-item">
+                    <span class="method-icon">${paymentIcon}</span>
+                    <span class="method-text">${paymentText}</span>
+                  </div>
+                  <div class="method-item">
+                    <span class="method-icon">${deliveryIcon}</span>
+                    <span class="method-text">${deliveryText}</span>
+                  </div>
+                </div>
+                
+                <div class="order-totals">
+                  <div class="total-line">
+                    <span>Subtotal:</span>
+                    <span>$${subtotal.toFixed(2)}</span>
+                  </div>
+                  <div class="total-line">
+                    <span>Envío:</span>
+                    <span>$${shippingCost.toFixed(2)}</span>
+                  </div>
+                  <div class="total-line">
+                    <span>Impuesto:</span>
+                    <span>$${tax.toFixed(2)}</span>
+                  </div>
+                  <div class="total-line total-final">
+                    <span>Total:</span>
+                    <span>$${order.total.toFixed(2)}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (error) {
+        console.error('Error cargando historial:', error);
+        const ordersList = document.getElementById('ordersList');
+        ordersList.innerHTML = '<div class="empty-state">Error cargando el historial de pedidos</div>';
+      }
+    }
+    
+    
+    async function loadStats() {
+      const userId = localStorage.getItem('currentUserId');
+      if (!userId) return;
+      
+      try {
+        const stats = await fetch(`/api/orders/${userId}/stats`).then(r => r.json());
+        
+        // Actualizar estadísticas básicas
+        document.getElementById('totalOrdersCount').textContent = stats.total_orders || 0;
+        document.getElementById('totalSpentAmount').textContent = '$' + (stats.total_spent || 0).toFixed(2);
+        document.getElementById('avgOrderValue').textContent = '$' + (stats.avg_order_value || 0).toFixed(2);
+        document.getElementById('lastOrderDate').textContent = stats.last_order_date ? 
+          new Date(stats.last_order_date).toLocaleDateString('es-ES') : 'Nunca';
+        
+        // Generar gráfico simple de gastos mensuales
+        const chartContainer = document.getElementById('monthlyChart');
+        if (chartContainer) {
+          if (stats.monthlyStats && stats.monthlyStats.length > 0) {
+            const maxSpent = Math.max(...stats.monthlyStats.map(m => m.total_spent));
+            
+            chartContainer.innerHTML = `
+              <div class="chart-header">
+                <h4>Evolución de Gastos Mensuales</h4>
+                <div class="chart-subtitle">Comparación mes a mes</div>
+              </div>
+              <div class="chart-bars">
+                ${stats.monthlyStats.map((month, index) => {
+                  const height = maxSpent > 0 ? (month.total_spent / maxSpent) * 100 : 0;
+                  const monthName = new Date(month.month + '-01').toLocaleDateString('es-ES', { month: 'short' });
+                  const year = month.month.split('-')[0];
+                  const isCurrentMonth = index === 0;
+                  
+                  return `
+                    <div class="chart-bar">
+                      <div class="bar-container">
+                        <div class="bar" style="height: ${height}%" title="$${month.total_spent.toFixed(2)} en ${monthName} ${year}"></div>
+                        <div class="bar-value-overlay">$${month.total_spent.toFixed(2)}</div>
+                      </div>
+                      <span class="bar-label">${monthName}</span>
+                      <span class="bar-year">${year}</span>
+                      ${isCurrentMonth ? '<span class="current-month">Actual</span>' : ''}
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            `;
+          } else {
+            chartContainer.innerHTML = '<div class="empty-state">No hay datos suficientes para mostrar el gráfico</div>';
+          }
+        }
+        
+        // Generar gráfico circular de categorías
+        loadCategoryChart(userId);
+        
+      } catch (error) {
+        console.error('Error cargando estadísticas:', error);
+        const chartContainer = document.getElementById('monthlyChart');
+        if (chartContainer) {
+          chartContainer.innerHTML = '<div class="empty-state">Error cargando estadísticas</div>';
+        }
+      }
+    }
+    
+    async function loadCategoryChart(userId) {
+      try {
+        // Obtener todos los productos con sus categorías
+        const productsResponse = await fetch('/api/products');
+        const products = await productsResponse.json();
+        
+        // Crear mapa de productos por ID
+        const productMap = {};
+        products.forEach(product => {
+          productMap[product.id] = {
+            name: product.name,
+            category: product.category || 'Sin categoría'
+          };
+        });
+        
+        // Obtener órdenes del usuario
+        const orders = await fetch(`/api/orders/${userId}`).then(r => r.json());
+        const categoryChart = document.getElementById('categoryChart');
+        
+        if (!orders || orders.length === 0) {
+          categoryChart.innerHTML = '<div class="empty-state">No hay datos suficientes para mostrar el gráfico</div>';
+          return;
+        }
+        
+        // Analizar categorías usando datos reales de la base de datos
+        const categoryStats = {};
+        let totalProducts = 0;
+        
+        orders.forEach(order => {
+          if (order.items_summary) {
+            // Parsear items_summary usando nombres de productos reales
+            const items = order.items_summary.split(', ');
+            items.forEach(item => {
+              const match = item.match(/^(.+?)\s+x(\d+)/);
+              if (match) {
+                const productName = match[1].trim();
+                const quantity = parseInt(match[2]);
+                
+                // Buscar el producto en el mapa para obtener su categoría real
+                let category = 'Sin categoría';
+                for (const [productId, productInfo] of Object.entries(productMap)) {
+                  if (productInfo.name.toLowerCase().includes(productName.toLowerCase()) || 
+                      productName.toLowerCase().includes(productInfo.name.toLowerCase())) {
+                    category = productInfo.category;
+                    break;
+                  }
+                }
+                
+                if (!categoryStats[category]) {
+                  categoryStats[category] = 0;
+                }
+                categoryStats[category] += quantity;
+                totalProducts += quantity;
+              }
+            });
+          } else if (order.items) {
+            // Parsear JSON usando IDs de productos reales
+            try {
+              const items = JSON.parse(order.items);
+              items.forEach(item => {
+                const productInfo = productMap[item.productId];
+                const category = productInfo ? productInfo.category : 'Sin categoría';
+                
+                if (!categoryStats[category]) {
+                  categoryStats[category] = 0;
+                }
+                categoryStats[category] += item.quantity;
+                totalProducts += item.quantity;
+              });
+            } catch (e) {
+              console.error('Error parsing order items:', e);
+            }
+          }
+        });
+        
+        if (totalProducts === 0) {
+          categoryChart.innerHTML = '<div class="empty-state">No hay productos para mostrar</div>';
+          return;
+        }
+        
+        // Generar gráfico de barras horizontales
+        const colors = ['#14b8a6', '#ff6b5a', '#22c55e', '#f59e0b', '#8b5cf6', '#ef4444', '#06b6d4', '#84cc16'];
+        const categories = Object.keys(categoryStats);
+        
+        // Ordenar categorías por cantidad (mayor a menor)
+        const sortedCategories = categories.sort((a, b) => categoryStats[b] - categoryStats[a]);
+        
+        // Crear barras horizontales
+        const bars = sortedCategories.map((category, index) => {
+          const count = categoryStats[category];
+          const percentage = (count / totalProducts) * 100;
+          const barWidth = Math.max(percentage * 2, 5); // Mínimo 5% de ancho para visibilidad
+          
+          return `
+            <div class="category-bar" data-category="${category}" data-count="${count}" data-percentage="${percentage.toFixed(1)}">
+              <div class="bar-label">
+                <span class="category-name">${category}</span>
+                <span class="category-count">${count} productos</span>
+              </div>
+              <div class="bar-container">
+                <div class="bar-fill" style="width: ${barWidth}%; background: ${colors[index % colors.length]}"></div>
+                <span class="bar-percentage">${percentage.toFixed(1)}%</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+        
+        categoryChart.innerHTML = `
+          <div class="bars-chart">
+            <div class="chart-header">
+              <h4>Distribución por Categorías</h4>
+              <p class="chart-subtitle">Total: ${totalProducts} productos</p>
+            </div>
+            <div class="bars-container">
+              ${bars}
+            </div>
+          </div>
+        `;
+        
+        // Interactividad para las barras
+        const categoryBars = categoryChart.querySelectorAll('.category-bar');
+        categoryBars.forEach(bar => {
+          bar.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateX(8px)';
+            this.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+          });
+          
+          bar.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateX(0)';
+            this.style.boxShadow = 'none';
+          });
+        });
+        
+      } catch (error) {
+        console.error('Error cargando gráfico de categorías:', error);
+        const categoryChart = document.getElementById('categoryChart');
+        if (categoryChart) {
+          categoryChart.innerHTML = '<div class="empty-state">Error cargando gráfico de categorías</div>';
+        }
+      }
+    }
+    
+    function loadExpenses() {
+      const userId = localStorage.getItem('currentUserId');
+      if (!userId) return;
+      
+      // Cargar datos de gastos del localStorage
+      const budget = localStorage.getItem(`budget_${userId}`);
+      if (budget) {
+        document.getElementById('monthlyBudget').value = budget;
+        updateBudgetDisplay();
+      }
+      
+      // Cargar estadísticas de gastos desde la API
+      loadExpenseStats(userId);
+    }
+    
+    async function loadExpenseStats(userId) {
+      try {
+        const stats = await fetch(`/api/orders/${userId}/stats`).then(r => r.json());
+        
+        // Actualizar estadísticas de gastos
+        const monthlySpent = stats.monthlyStats && stats.monthlyStats.length > 0 ? 
+          stats.monthlyStats[0].total_spent : 0;
+        
+        document.getElementById('monthlyExpense').textContent = '$' + monthlySpent.toFixed(2);
+        document.getElementById('monthlyOrders').textContent = stats.monthlyStats && stats.monthlyStats.length > 0 ? 
+          stats.monthlyStats[0].orders_count : 0;
+        document.getElementById('avgExpense').textContent = '$' + (stats.avg_order_value || 0).toFixed(2);
+        
+        // Generar recomendaciones inteligentes
+        generateRecommendations(stats, monthlySpent, stats.monthlyStats && stats.monthlyStats.length > 0 ? 
+          stats.monthlyStats[0].orders_count : 0);
+        
+        // Generar tendencias de gastos
+        generateExpenseTrends(stats, monthlySpent, monthlyOrders);
+        
+        // Actualizar presupuesto si existe
+        const budget = localStorage.getItem(`budget_${userId}`);
+        if (budget) {
+          const budgetAmount = parseFloat(budget);
+          const remaining = budgetAmount - monthlySpent;
+          document.getElementById('budgetRemaining').textContent = '$' + remaining.toFixed(2);
+          
+          // Cambiar color según el presupuesto
+          const remainingElement = document.getElementById('budgetRemaining');
+          if (remaining < 0) {
+            remainingElement.style.color = '#ef4444'; // Rojo si se excedió
+          } else if (remaining < budgetAmount * 0.2) {
+            remainingElement.style.color = '#f59e0b'; // Amarillo si queda poco
+          } else {
+            remainingElement.style.color = '#22c55e'; // Verde si está bien
+          }
+        }
+      } catch (error) {
+        console.error('Error cargando estadísticas de gastos:', error);
+      }
+    }
+    
+    function generateRecommendations(stats, monthlySpent, monthlyOrders) {
+      const recommendationsList = document.getElementById('recommendationsList');
+      const recommendations = [];
+      
+      // Obtener presupuesto del usuario
+      const userId = localStorage.getItem('currentUserId');
+      const budget = localStorage.getItem(`budget_${userId}`);
+      const budgetAmount = budget ? parseFloat(budget) : 0;
+      
+      // Recomendación 1: Presupuesto
+      if (budgetAmount > 0) {
+        const budgetUsage = (monthlySpent / budgetAmount) * 100;
+        
+        if (budgetUsage > 90) {
+          recommendations.push({
+            icon: '⚠️',
+            title: 'Presupuesto casi agotado',
+            text: `Has gastado el ${budgetUsage.toFixed(1)}% de tu presupuesto mensual. Considera reducir gastos o ajustar tu presupuesto.`,
+            priority: 'high'
+          });
+        } else if (budgetUsage > 75) {
+          recommendations.push({
+            icon: '💡',
+            title: 'Presupuesto en zona de atención',
+            text: `Has gastado el ${budgetUsage.toFixed(1)}% de tu presupuesto. Te quedan $${(budgetAmount - monthlySpent).toFixed(2)} para el resto del mes.`,
+            priority: 'medium'
+          });
+        } else if (budgetUsage < 30) {
+          recommendations.push({
+            icon: '✅',
+            title: 'Excelente control de gastos',
+            text: `Solo has gastado el ${budgetUsage.toFixed(1)}% de tu presupuesto. ¡Sigue así!`,
+            priority: 'low'
+          });
+        }
+      } else {
+        recommendations.push({
+          icon: '📊',
+          title: 'Establece un presupuesto',
+          text: 'Configura un presupuesto mensual para tener mejor control de tus gastos y recibir recomendaciones personalizadas.',
+          priority: 'medium'
+        });
+      }
+      
+      // Recomendación 2: Frecuencia de pedidos
+      if (monthlyOrders > 10) {
+        recommendations.push({
+          icon: '🛒',
+          title: 'Muchos pedidos pequeños',
+          text: `Has hecho ${monthlyOrders} pedidos este mes. Considera hacer pedidos más grandes para ahorrar en envíos.`,
+          priority: 'medium'
+        });
+      } else if (monthlyOrders < 2 && monthlySpent > 0) {
+        recommendations.push({
+          icon: '💪',
+          title: 'Pedidos eficientes',
+          text: 'Haces pocos pedidos pero con buen valor. ¡Excelente estrategia de compra!',
+          priority: 'low'
+        });
+      }
+      
+      // Recomendación 3: Valor promedio
+      const avgOrderValue = stats.avg_order_value || 0;
+      if (avgOrderValue < 5) {
+        recommendations.push({
+          icon: '💰',
+          title: 'Pedidos de bajo valor',
+          text: 'Tus pedidos tienen un valor promedio bajo. Considera agregar más productos para aprovechar mejor los envíos.',
+          priority: 'low'
+        });
+      } else if (avgOrderValue > 50) {
+        recommendations.push({
+          icon: '🎯',
+          title: 'Pedidos de alto valor',
+          text: 'Tus pedidos tienen un valor promedio alto. ¡Excelente para aprovechar ofertas y descuentos!',
+          priority: 'low'
+        });
+      }
+      
+      // Recomendación 4: Tendencia temporal
+      if (stats.monthlyStats && stats.monthlyStats.length > 1) {
+        const currentMonth = stats.monthlyStats[0].total_spent;
+        const previousMonth = stats.monthlyStats[1].total_spent;
+        const change = ((currentMonth - previousMonth) / previousMonth) * 100;
+        
+        if (change > 50) {
+          recommendations.push({
+            icon: '📈',
+            title: 'Aumento significativo en gastos',
+            text: `Tus gastos aumentaron ${change.toFixed(1)}% respecto al mes anterior. Revisa si es necesario ajustar tu presupuesto.`,
+            priority: 'high'
+          });
+        } else if (change < -30) {
+          recommendations.push({
+            icon: '📉',
+            title: 'Reducción notable en gastos',
+            text: `Tus gastos disminuyeron ${Math.abs(change).toFixed(1)}% respecto al mes anterior. ¡Excelente trabajo!`,
+            priority: 'low'
+          });
+        }
+      }
+      
+      // Recomendación 5: Productos eco
+      recommendations.push({
+        icon: '🌱',
+        title: 'Compra productos eco',
+        text: 'Considera agregar más productos ecológicos a tus pedidos. Son mejores para el medio ambiente y tu salud.',
+        priority: 'low'
+      });
+      
+      // Recomendación 6: Días de la semana
+      const today = new Date();
+      const dayOfWeek = today.getDay();
+      if (dayOfWeek === 0 || dayOfWeek === 6) {
+        recommendations.push({
+          icon: '📅',
+          title: 'Fin de semana inteligente',
+          text: 'Los fines de semana son ideales para hacer pedidos más grandes y planificar la semana. Aprovecha para ahorrar en envíos.',
+          priority: 'low'
+        });
+      }
+      
+      // Recomendación 7: Horario de compra
+      const hour = today.getHours();
+      if (hour >= 9 && hour <= 11) {
+        recommendations.push({
+          icon: '⏰',
+          title: 'Horario óptimo',
+          text: 'Estás comprando en un horario ideal. Las entregas matutinas suelen ser más rápidas y confiables.',
+          priority: 'low'
+        });
+      }
+      
+      // Recomendación 8: Estacionalidad
+      const month = today.getMonth();
+      if (month >= 5 && month <= 8) {
+        recommendations.push({
+          icon: '☀️',
+          title: 'Temporada de verano',
+          text: 'En verano, considera comprar más frutas frescas y bebidas. Es la temporada ideal para productos hidratantes.',
+          priority: 'low'
+        });
+      } else if (month >= 11 || month <= 1) {
+        recommendations.push({
+          icon: '❄️',
+          title: 'Temporada de invierno',
+          text: 'En invierno, considera productos que se conserven bien y bebidas calientes. Planifica compras más grandes.',
+          priority: 'low'
+        });
+      }
+      
+      // Recomendación 9: Comparación con promedio general
+      if (avgOrderValue > 15) {
+        recommendations.push({
+          icon: '💎',
+          title: 'Comprador premium',
+          text: 'Tus pedidos tienen un valor alto. Considera programas de fidelidad o descuentos por volumen.',
+          priority: 'low'
+        });
+      }
+      
+      // Recomendación 10: Frecuencia óptima
+      const daysSinceLastOrder = stats.last_order_date ? 
+        Math.floor((new Date() - new Date(stats.last_order_date)) / (1000 * 60 * 60 * 24)) : 0;
+      
+      if (daysSinceLastOrder > 7) {
+        recommendations.push({
+          icon: '⏳',
+          title: 'Tiempo sin comprar',
+          text: `Han pasado ${daysSinceLastOrder} días desde tu último pedido. Considera hacer una compra para mantener productos frescos.`,
+          priority: 'medium'
+        });
+      } else if (daysSinceLastOrder < 2) {
+        recommendations.push({
+          icon: '🛒',
+          title: 'Comprador frecuente',
+          text: 'Haces compras muy frecuentes. Considera hacer pedidos más grandes para optimizar costos de envío.',
+          priority: 'medium'
+        });
+      }
+      
+      // Mostrar recomendaciones
+      if (recommendations.length === 0) {
+        recommendationsList.innerHTML = '<div class="empty-state">No hay recomendaciones disponibles en este momento</div>';
+      } else {
+        recommendationsList.innerHTML = recommendations.map(rec => `
+          <div class="recommendation-item">
+            <div class="recommendation-icon">${rec.icon}</div>
+            <div class="recommendation-content">
+              <div class="recommendation-title">${rec.title}</div>
+              <div class="recommendation-text">${rec.text}</div>
+            </div>
+            <div class="recommendation-priority priority-${rec.priority}">
+              ${rec.priority === 'high' ? 'Alta' : rec.priority === 'medium' ? 'Media' : 'Baja'}
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+    
+    function generateExpenseTrends(stats, monthlySpent, monthlyOrders) {
+      const today = new Date();
+      const currentMonth = today.getMonth();
+      const currentYear = today.getFullYear();
+      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+      const daysPassed = today.getDate();
+      const daysRemaining = daysInMonth - daysPassed;
+      
+      // Proyección mensual
+      const dailyAverage = monthlySpent / daysPassed;
+      const projectedMonthly = dailyAverage * daysInMonth;
+      
+      // Meta de ahorro
+      const userId = localStorage.getItem('currentUserId');
+      const budget = localStorage.getItem(`budget_${userId}`);
+      const budgetAmount = budget ? parseFloat(budget) : 0;
+      
+      let savingsGoal = '';
+      if (budgetAmount > 0) {
+        const potentialSavings = budgetAmount - projectedMonthly;
+        if (potentialSavings > 0) {
+          savingsGoal = `Puedes ahorrar $${potentialSavings.toFixed(2)} este mes`;
+        } else {
+          savingsGoal = `Necesitas ajustar tu presupuesto en $${Math.abs(potentialSavings).toFixed(2)}`;
+        }
+      } else {
+        savingsGoal = 'Establece un presupuesto para calcular tu potencial de ahorro';
+      }
+      
+      // Actualizar elementos
+      document.getElementById('monthlyProjection').textContent = 
+        `Proyección: $${projectedMonthly.toFixed(2)} (promedio diario: $${dailyAverage.toFixed(2)})`;
+      
+      document.getElementById('savingsGoal').textContent = savingsGoal;
+      
+      document.getElementById('daysRemaining').textContent = 
+        `${daysRemaining} días restantes en ${today.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' })}`;
+    }
+    
+    function setMonthlyBudget() {
+      const budget = document.getElementById('monthlyBudget').value;
+      const userId = localStorage.getItem('currentUserId');
+      
+      if (!budget || budget <= 0) {
+        alert('Por favor ingresa un presupuesto válido');
+        return;
+      }
+      
+      localStorage.setItem(`budget_${userId}`, budget);
+      updateBudgetDisplay();
+      alert('Presupuesto establecido correctamente');
+    }
+    
+    function loadBudget() {
+      const userId = localStorage.getItem('currentUserId');
+      const budget = localStorage.getItem(`budget_${userId}`);
+      if (budget) {
+        document.getElementById('monthlyBudget').value = budget;
+        updateBudgetDisplay();
+      }
+    }
+    
+    async function updateBudgetDisplay() {
+      const userId = localStorage.getItem('currentUserId');
+      const budget = localStorage.getItem(`budget_${userId}`);
+      
+      if (!budget) return;
+      
+      try {
+        const stats = await fetch(`/api/orders/${userId}/stats`).then(r => r.json());
+        const monthlySpent = stats.monthlyStats && stats.monthlyStats.length > 0 ? 
+          stats.monthlyStats[0].total_spent : 0;
+        
+        const percentage = (monthlySpent / budget) * 100;
+        const progressFill = document.getElementById('budgetProgress');
+        const budgetText = document.getElementById('budgetText');
+        
+        progressFill.style.width = Math.min(percentage, 100) + '%';
+        progressFill.style.backgroundColor = percentage > 80 ? '#ef4444' : percentage > 60 ? '#f59e0b' : '#10b981';
+        
+        budgetText.textContent = `$${monthlySpent.toFixed(2)} de $${budget} (${percentage.toFixed(1)}%)`;
+        
+        // Actualizar análisis
+        document.getElementById('avgExpense').textContent = '$' + (stats.avg_order_value || 0).toFixed(2);
+        document.getElementById('monthlyOrders').textContent = stats.monthlyStats && stats.monthlyStats.length > 0 ? 
+          stats.monthlyStats[0].orders_count : 0;
+        document.getElementById('monthlyExpense').textContent = '$' + monthlySpent.toFixed(2);
+      } catch (error) {
+        console.error('Error actualizando presupuesto:', error);
+      }
+    }
+    
+    async function loadAdminStats() {
+      try {
+        // Obtener estadísticas generales de la tienda
+        const response = await fetch('/api/admin/stats');
+        const adminStats = await response.json();
+        
+        // Actualizar tarjetas de estadísticas
+        document.getElementById('adminTotalSales').textContent = '$' + (adminStats.totalSales || 0).toFixed(2);
+        document.getElementById('adminTotalOrders').textContent = adminStats.totalOrders || 0;
+        document.getElementById('adminActiveCustomers').textContent = adminStats.activeCustomers || 0;
+        document.getElementById('adminAvgOrder').textContent = '$' + (adminStats.avgOrderValue || 0).toFixed(2);
+        
+        // Generar gráfico de ventas mensuales
+        generateAdminSalesChart(adminStats.monthlySales || []);
+        
+        // Generar lista de productos más vendidos
+        generateTopProducts(adminStats.topProducts || []);
+        
+      } catch (error) {
+        console.error('Error cargando estadísticas de administrador:', error);
+        document.getElementById('adminSalesChart').innerHTML = '<div class="empty-state">Error cargando estadísticas</div>';
+        document.getElementById('adminTopProducts').innerHTML = '<div class="empty-state">Error cargando productos</div>';
+      }
+    }
+    
+    function generateAdminSalesChart(monthlySales) {
+      const chartContainer = document.getElementById('adminSalesChart');
+      
+      if (!monthlySales || monthlySales.length === 0) {
+        chartContainer.innerHTML = '<div class="empty-state">No hay datos de ventas disponibles</div>';
+        return;
+      }
+      
+      const maxSales = Math.max(...monthlySales.map(m => m.totalSales));
+      
+      chartContainer.innerHTML = `
+        <div class="chart-header">
+          <h4>Evolución de Ventas Mensuales</h4>
+          <div class="chart-subtitle">Ingresos de la tienda</div>
+        </div>
+        <div class="chart-bars">
+          ${monthlySales.map((month, index) => {
+            const height = maxSales > 0 ? (month.totalSales / maxSales) * 100 : 0;
+            const monthName = new Date(month.month + '-01').toLocaleDateString('es-ES', { month: 'short' });
+            const year = month.month.split('-')[0];
+            const isCurrentMonth = index === 0;
+            
+            return `
+              <div class="chart-bar">
+                <div class="bar-container">
+                  <div class="bar" style="height: ${height}%" title="$${month.totalSales.toFixed(2)} en ${monthName} ${year}"></div>
+                  <div class="bar-value-overlay">$${month.totalSales.toFixed(2)}</div>
+                </div>
+                <span class="bar-label">${monthName}</span>
+                <span class="bar-year">${year}</span>
+                ${isCurrentMonth ? '<span class="current-month">Actual</span>' : ''}
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+    }
+    
+    function generateTopProducts(topProducts) {
+      const container = document.getElementById('adminTopProducts');
+      
+      if (!topProducts || topProducts.length === 0) {
+        container.innerHTML = '<div class="empty-state">No hay datos de productos disponibles</div>';
+        return;
+      }
+      
+      container.innerHTML = `
+        <div class="top-products-header">
+          <h4>Productos Más Vendidos</h4>
+          <p class="chart-subtitle">Ranking de popularidad</p>
+        </div>
+        <div class="products-ranking">
+          ${topProducts.map((product, index) => `
+            <div class="product-rank-item">
+              <div class="rank-number">#${index + 1}</div>
+              <div class="product-info">
+                <div class="product-name">${product.name}</div>
+                <div class="product-stats">
+                  <span class="product-sales">${product.totalSold} vendidos</span>
+                  <span class="product-revenue">$${product.totalRevenue.toFixed(2)}</span>
+                </div>
+              </div>
+              <div class="product-category">${product.category || 'Sin categoría'}</div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+  </script>
+</body>
+</html>

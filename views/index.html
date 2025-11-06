@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EcoMarket - Delivery Express</title>
+  <link rel="icon" type="image/png" href="/assets/img/carritologo.png">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header class="header-app">
+    <div class="container header-row">
+      <div class="logo">
+        <div class="logo-icon">
+          <img src="/assets/img/carritologo.png" alt="SuperMercado Logo" class="logo-img">
+        </div>
+        <div class="logo-text">
+          <div class="title">EcoMarket</div>
+          <div class="subtitle">Delivery Express</div>
+        </div>
+      </div>
+      <div class="search"><input id="search" type="search" placeholder="Buscar productos..."><span class="search-icon">🔎</span></div>
+      <nav class="icons">
+        <a class="icon" id="themeToggle" title="Modo Nocturno">🌙</a>
+        <a class="icon" id="ecoToggle" title="Modo Ecológico">🌱</a>
+        <a class="icon admin-link hidden" href="/views/admin.html" title="Admin">🛠️</a>
+        <a class="icon" id="cartIcon" title="Carrito">🛍️ <span id="cartCount">0</span></a>
+        <a class="icon" id="accountIcon" title="Cuenta">👤</a>
+        <a class="icon profile-link hidden" href="/views/profile.html" title="Mi Perfil">👤</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero-badge">Nuevos Productos</div>
+      <h1 class="hero-title">Productos Frescos<br>Entrega Rápida</h1>
+      <p class="hero-desc">Obtén productos frescos y orgánicos entregados en tu puerta en menos de 2 horas. Calidad garantizada.</p>
+      <div class="row">
+        <button class="btn primary" id="shopNow">Comprar Ahora →</button>
+        <button class="btn" id="learnMore">Saber Más</button>
+      </div>
+    </section>
+
+    <section class="features" id="features"></section>
+
+    <h2 class="section-title">Comprar por Categoría</h2>
+    <section id="categories" class="categories"></section>
+
+    <h2 class="section-title">Todos los Productos</h2>
+    <section id="grid" class="grid"></section>
+
+    <section id="cartPanel" class="cart drawer hidden">
+      <div class="drawer-head">
+        <h2>Carrito de Compras</h2>
+        <button class="btn" id="closeCart">✕</button>
+      </div>
+      <div id="cartItems"></div>
+      <div class="cart-summary">
+        <span>Total:</span>
+        <strong id="cartTotal">$0.00</strong>
+      </div>
+      <div class="cart-actions">
+        <button id="clearCartBtn" class="btn">Limpiar Carrito</button>
+        <button id="checkoutBtn" class="btn primary">Finalizar compra</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="container footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <img src="/assets/img/carritologo.png" alt="EcoMarket Logo" class="footer-logo-img">
+          <span class="footer-title">EcoMarket</span>
+        </div>
+        <p class="footer-tagline">🍃 Tu supermercado ecológico de confianza 🌱</p>
+      </div>
+      <div class="footer-info">
+        <p class="footer-copyright">© 2025 EcoMarket · Delivery Express</p>
+        <p class="footer-mission">Comprometidos con el medio ambiente y tu bienestar</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Modales -->
+  <div id="overlay" class="overlay hidden"></div>
+  
+  <!-- Modal Saber Más -->
+  <div id="aboutModal" class="modal hidden">
+    <div class="modal-head">
+      <h2>🌱 Acerca de EcoMarket</h2>
+      <button class="modal-close" id="aboutClose">✕</button>
+    </div>
+    <div class="modal-body about-modal-content">
+      <div class="about-hero">
+        <div class="about-image">
+          <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop&crop=center&q=80" alt="Productos frescos y orgánicos" class="about-hero-img">
+        </div>
+        <div class="about-intro">
+          <h3>🍃 Tu Supermercado Ecológico de Confianza</h3>
+          <p class="about-tagline">Comprometidos con el planeta y tu bienestar</p>
+        </div>
+      </div>
+      
+      <div class="about-content">
+        <div class="about-section">
+          <div class="about-icon">🌿</div>
+          <div class="about-text">
+            <h4>Productos 100% Ecológicos</h4>
+            <p>Seleccionamos cuidadosamente productos frescos, orgánicos y sostenibles. Cada artículo en nuestro catálogo eco-friendly está certificado y cumple con los más altos estándares de calidad.</p>
+          </div>
+        </div>
+        
+        <div class="about-section">
+          <div class="about-icon">🚚</div>
+          <div class="about-text">
+            <h4>Delivery Express</h4>
+            <p>Entregamos tus productos frescos en menos de 2 horas. Nuestro servicio de delivery rápido y eficiente garantiza que recibas tus compras en perfecto estado y a tiempo.</p>
+          </div>
+        </div>
+        
+        <div class="about-section">
+          <div class="about-icon">💚</div>
+          <div class="about-text">
+            <h4>Compromiso Ambiental</h4>
+            <p>Reducimos el impacto ambiental con empaques biodegradables, vehículos eléctricos para delivery y prácticas sostenibles en toda nuestra operación.</p>
+          </div>
+        </div>
+        
+        <div class="about-section">
+          <div class="about-icon">⭐</div>
+          <div class="about-text">
+            <h4>Calidad Garantizada</h4>
+            <p>Trabajamos directamente con productores locales y proveedores certificados para ofrecerte la mejor calidad al mejor precio, con descuentos exclusivos en productos seleccionados.</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="about-cta">
+        <div class="about-stats">
+          <div class="stat-item">
+            <span class="stat-number">100%</span>
+            <span class="stat-label">Ecológico</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">2h</span>
+            <span class="stat-label">Delivery</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">24/7</span>
+            <span class="stat-label">Disponible</span>
+          </div>
+        </div>
+        <button class="btn primary" id="startShopping">Comenzar a Comprar 🛒</button>
+      </div>
+    </div>
+  </div>
+  <div id="productModal" class="modal hidden">
+    <div class="modal-head">
+      <h3 id="pmTitle">Producto</h3>
+      <button class="btn" id="pmClose">✕</button>
+    </div>
+    <div class="modal-body">
+      <img id="pmImg" alt="" style="width:100%;border-radius:12px;max-height:260px;object-fit:cover">
+      <p id="pmDesc" class="muted" style="margin-top:8px"></p>
+      <div class="row" style="align-items:center;justify-content:space-between;margin-top:8px">
+        <strong id="pmPrice">$0.00</strong>
+        <button class="btn primary" id="pmAdd">Añadir al carrito</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="accountModal" class="modal login-modal hidden">
+    <div class="modal-head">
+      <h3 id="modalTitle">Bienvenido/a – ingresa a tu cuenta</h3>
+      <button class="btn" id="amClose">✕</button>
+    </div>
+    <div class="modal-body">
+      <p id="modalSubtitle" style="color:var(--muted);margin-bottom:24px;font-size:14px;">Inicia sesión o crea una cuenta para continuar con tu compra</p>
+      
+      <!-- Tabs de Login/Registro -->
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="loginTab">Iniciar Sesión</button>
+        <button class="auth-tab" id="registerTab">Registrarse</button>
+      </div>
+      
+      <!-- Formulario de Login -->
+      <div id="loginForm" class="auth-form">
+        <div class="form-group">
+          <label>Correo Electrónico</label>
+          <input id="amEmail" type="email" placeholder="tu@ejemplo.com">
+        </div>
+        <div class="form-group">
+          <label>Contraseña</label>
+          <input id="amPass" type="password" placeholder="••••••••">
+        </div>
+        <button class="btn primary" id="amLogin">Iniciar Sesión</button>
+        <div class="forgot-link">
+          <a href="#" onclick="alert('Función de recuperación de contraseña'); return false;">¿Olvidaste tu contraseña?</a>
+        </div>
+      </div>
+      
+      <!-- Formulario de Registro -->
+      <div id="registerForm" class="auth-form hidden">
+        <div class="form-group">
+          <label>Nombre Completo</label>
+          <input id="amName" type="text" placeholder="Juan Pérez">
+        </div>
+        <div class="form-group">
+          <label>Correo Electrónico</label>
+          <input id="amEmailReg" type="email" placeholder="tu@ejemplo.com">
+        </div>
+        <div class="form-group">
+          <label>Contraseña</label>
+          <input id="amPassReg" type="password" placeholder="••••••••">
+        </div>
+        <button class="btn primary" id="amRegister">Crear Cuenta</button>
+      </div>
+      
+      <div class="divider">
+        <span>O CONTINUAR CON</span>
+      </div>
+      
+      <div class="social-buttons">
+        <button class="social-btn" title="Google">G</button>
+        <button class="social-btn" title="Apple">🍎</button>
+        <button class="social-btn" title="Facebook">f</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sistema de Checkout Multi-paso -->
+  <div id="checkoutModal" class="checkout-modal hidden">
+    <div class="checkout-container">
+      <!-- Header del Checkout -->
+      <div class="checkout-header">
+        <button class="checkout-back-btn" id="checkoutBackBtn">
+          <span class="back-icon">←</span>
+          <span>Volver</span>
+        </button>
+        
+        <!-- Indicador de pasos -->
+        <div class="checkout-steps">
+          <div class="step active" data-step="1">
+            <div class="step-number">1</div>
+            <div class="step-label">Dirección</div>
+          </div>
+          <div class="step" data-step="2">
+            <div class="step-number">2</div>
+            <div class="step-label">Entrega</div>
+          </div>
+          <div class="step" data-step="3">
+            <div class="step-number">3</div>
+            <div class="step-label">Pago</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contenido principal del checkout -->
+      <div class="checkout-content">
+        <!-- Panel izquierdo - Formularios -->
+        <div class="checkout-main">
+          
+          <!-- Paso 1: Dirección -->
+          <div class="checkout-step" id="step1">
+            <div class="step-card">
+              <div class="step-header">
+                <div class="step-icon">📍</div>
+                <h2>Dirección de Envío</h2>
+              </div>
+              
+              <form id="addressForm" class="checkout-form">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="firstName">Nombre</label>
+                    <input type="text" id="firstName" name="firstName" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="lastName">Apellido</label>
+                    <input type="text" id="lastName" name="lastName" required>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="address">Dirección</label>
+                  <input type="text" id="address" name="address" placeholder="Calle, número, colonia" required>
+                </div>
+                
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="city">Ciudad</label>
+                    <input type="text" id="city" name="city" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="postalCode">Código Postal</label>
+                    <input type="text" id="postalCode" name="postalCode" required>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="phone">Número de Teléfono</label>
+                  <input type="tel" id="phone" name="phone" placeholder="+52 (55) 1234-5678" required>
+                </div>
+                
+                <!-- Botones directamente debajo del teléfono -->
+                <div class="address-buttons">
+                  <button type="button" class="btn secondary" id="backToCartBtn">Volver al Carrito</button>
+                  <button type="button" class="btn primary" id="continueToDeliveryBtn">Continuar</button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Paso 2: Entrega -->
+          <div class="checkout-step hidden" id="step2">
+            <div class="step-card">
+              <div class="step-header">
+                <div class="step-icon">🚚</div>
+                <h2>Método de Entrega</h2>
+              </div>
+              
+              <div class="delivery-options">
+                <div class="delivery-option" data-delivery="express">
+                  <div class="delivery-info">
+                    <div class="delivery-name">Entrega Express</div>
+                    <div class="delivery-time">1-2 horas</div>
+                  </div>
+                  <div class="delivery-price">$9.99</div>
+                </div>
+                
+                <div class="delivery-option selected" data-delivery="standard">
+                  <div class="delivery-info">
+                    <div class="delivery-name">Entrega Estándar</div>
+                    <div class="delivery-time">Mismo día</div>
+                  </div>
+                  <div class="delivery-price">$4.99</div>
+                </div>
+                
+                <div class="delivery-option" data-delivery="pickup">
+                  <div class="delivery-info">
+                    <div class="delivery-name">Recoger en Tienda</div>
+                    <div class="delivery-time">Recoger en 2 horas</div>
+                  </div>
+                  <div class="delivery-price">GRATIS</div>
+                </div>
+              </div>
+              
+              <div class="step-actions">
+                <button type="button" class="btn secondary" id="backToAddressBtn">Anterior</button>
+                <button type="button" class="btn primary" id="continueToPaymentBtn">Continuar</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Paso 3: Pago -->
+          <div class="checkout-step hidden" id="step3">
+            <div class="step-card">
+              <div class="step-header">
+                <div class="step-icon">💳</div>
+                <h2>Método de Pago</h2>
+              </div>
+              
+              <div class="payment-options">
+                <div class="payment-option selected" data-payment="card">
+                  <div class="payment-icon">💳</div>
+                  <div class="payment-name">Tarjeta de Crédito</div>
+                </div>
+                
+                <div class="payment-option" data-payment="cash">
+                  <div class="payment-icon">💵</div>
+                  <div class="payment-name">Contra Entrega</div>
+                </div>
+              </div>
+              
+              <!-- Formulario de tarjeta -->
+              <div class="card-form" id="cardForm">
+                <div class="form-group">
+                  <label for="cardNumber">Número de Tarjeta</label>
+                  <input type="text" id="cardNumber" name="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19">
+                </div>
+                
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="expiryDate">Fecha de Vencimiento</label>
+                    <input type="text" id="expiryDate" name="expiryDate" placeholder="MM/AA" maxlength="5">
+                  </div>
+                  <div class="form-group">
+                    <label for="cvv">CVV</label>
+                    <input type="text" id="cvv" name="cvv" placeholder="123" maxlength="3">
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="cardName">Nombre en la Tarjeta</label>
+                  <input type="text" id="cardName" name="cardName" placeholder="Juan Pérez">
+                </div>
+              </div>
+              
+              <div class="step-actions">
+                <button type="button" class="btn secondary" id="backToDeliveryBtn">Anterior</button>
+                <button type="button" class="btn primary" id="completeOrderBtn">Finalizar Pedido</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel derecho - Resumen del pedido -->
+        <div class="checkout-summary">
+          <div class="summary-card">
+            <h3>Resumen del Pedido</h3>
+            
+            <div class="summary-items" id="checkoutSummaryItems">
+              <!-- Los items se cargarán dinámicamente -->
+            </div>
+            
+            <div class="summary-totals">
+              <div class="summary-line">
+                <span>Subtotal</span>
+                <span id="checkoutSubtotal">$0.00</span>
+              </div>
+              <div class="summary-line">
+                <span>Impuesto</span>
+                <span id="checkoutTax">$0.00</span>
+              </div>
+              <div class="summary-line">
+                <span>Envío</span>
+                <span id="checkoutShipping">$0.00</span>
+              </div>
+              <div class="summary-line total">
+                <span>Total</span>
+                <span id="checkoutTotal">$0.00</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>
+
+

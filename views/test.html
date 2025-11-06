@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SuperMercado - Funcional</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header-app">
+        <div class="container">
+            <div class="header-row">
+                <div class="logo">
+                    <div class="logo-icon">🛒</div>
+                    <div>
+                        <div class="logo-text">SuperMercado</div>
+                        <div class="logo-sub">Delivery Express</div>
+                    </div>
+                </div>
+                <div class="search">
+                    <input id="search" type="search" placeholder="Buscar productos...">
+                </div>
+                <nav class="icons">
+                    <a class="icon" id="themeToggle" title="Modo Nocturno">🌙</a>
+                    <a class="icon" id="ecoToggle" title="Modo Ecológico">🌱</a>
+                    <a class="icon admin-link hidden" href="/admin.html" title="Admin">🛠️</a>
+                    <a class="icon" id="cartIcon" title="Carrito">🛍️ <span id="cartCount">0</span></a>
+                    <a class="icon" id="accountIcon" title="Cuenta">👤</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <div class="hero-badge">Nuevos Productos</div>
+            <h1 class="hero-title">Productos Frescos<br>Entrega Rápida</h1>
+            <p class="hero-desc">Obtén productos frescos y orgánicos entregados en tu puerta en menos de 2 horas. Calidad garantizada.</p>
+            <div class="row">
+                <button class="btn primary" id="shopNow">Comprar Ahora →</button>
+                <button class="btn" id="learnMore">Saber Más</button>
+            </div>
+        </section>
+
+        <section class="features" id="features"></section>
+
+        <h2 class="section-title">Comprar por Categoría</h2>
+        <section id="categories" class="categories"></section>
+
+        <h2 class="section-title">Todos los Productos</h2>
+        <section id="grid" class="grid"></section>
+    </main>
+
+    <!-- Carrito -->
+    <section id="cartPanel" class="cart drawer hidden">
+        <div class="cart-header">
+            <h3>Carrito de Compras</h3>
+            <button class="btn" id="closeCart">✕</button>
+        </div>
+        <div id="cartItems" class="cart-items"></div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <strong>Total: <span id="cartTotal">$0.00</span></strong>
+            </div>
+            <button class="btn primary" id="checkoutBtn">Finalizar Compra</button>
+        </div>
+    </section>
+
+    <script src="app-simple.js"></script>
+</body>
+</html>

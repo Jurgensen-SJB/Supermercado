@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug SuperMercado</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header-app">
+        <div class="container">
+            <div class="header-row">
+                <div class="logo">
+                    <div class="logo-icon">🛒</div>
+                    <div>
+                        <div class="logo-text">SuperMercado</div>
+                        <div class="logo-sub">Debug</div>
+                    </div>
+                </div>
+                <div class="search">
+                    <input id="search" type="search" placeholder="Buscar productos...">
+                </div>
+                <nav class="icons">
+                    <a class="icon" id="themeToggle" title="Modo Nocturno">🌙</a>
+                    <a class="icon" id="ecoToggle" title="Modo Ecológico">🌱</a>
+                    <a class="icon" id="cartIcon" title="Carrito">🛍️ <span id="cartCount">0</span></a>
+                    <a class="icon" id="accountIcon" title="Cuenta">👤</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>Debug SuperMercado</h1>
+            <p>Verificando funcionalidades...</p>
+        </section>
+
+        <section class="features" id="features"></section>
+
+        <h2 class="section-title">Comprar por Categoría</h2>
+        <section id="categories" class="categories"></section>
+
+        <h2 class="section-title">Todos los Productos</h2>
+        <section id="grid" class="grid"></section>
+
+        <div id="debug-info" style="margin: 20px 0; padding: 20px; background: #f0f0f0; border-radius: 8px;">
+            <h3>Información de Debug</h3>
+            <div id="debug-content"></div>
+        </div>
+    </main>
+
+    <script>
+        console.log('Script de debug cargado');
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM cargado');
+            
+            const debugContent = document.getElementById('debug-content');
+            const features = document.getElementById('features');
+            const categories = document.getElementById('categories');
+            const grid = document.getElementById('grid');
+            
+            debugContent.innerHTML = `
+                <p>✅ DOM cargado correctamente</p>
+                <p>✅ Elementos encontrados: features=${!!features}, categories=${!!categories}, grid=${!!grid}</p>
+            `;
+            
+            // Cargar features
+            if (features) {
+                features.innerHTML = `
+                    <div class="card"><strong>Entrega en 2 Horas</strong><div class="muted">Rápido y confiable</div></div>
+                    <div class="card"><strong>100% Orgánico</strong><div class="muted">Calidad de granja</div></div>
+                    <div class="card"><strong>Mejores Precios</strong><div class="muted">Ahorra hasta 40%</div></div>
+                `;
+                debugContent.innerHTML += '<p>✅ Features cargadas</p>';
+            }
+            
+            // Cargar categorías
+            if (categories) {
+                const options = [
+                    {emoji:'🧺',name:'Todas',value:''},
+                    {emoji:'🍎',name:'Frutas',value:'Frutas'},
+                    {emoji:'🥛',name:'Lácteos',value:'Lácteos'},
+                    {emoji:'🍞',name:'Panadería',value:'Panadería'},
+                    {emoji:'🥚',name:'Huevos',value:'Huevos'},
+                    {emoji:'🥤',name:'Bebidas',value:'Bebidas'}
+                ];
+                categories.innerHTML = options.map((o,i)=>`
+                    <button class="cat ${i===0?'active':''}" data-cat="${o.value}">
+                        <div class="emoji">${o.emoji}</div>
+                        <div>${o.name}</div>
+                    </button>
+                `).join('');
+                debugContent.innerHTML += '<p>✅ Categorías cargadas</p>';
+            }
+            
+            // Cargar productos
+            async function loadProducts() {
+                try {
+                    console.log('Cargando productos...');
+                    const response = await fetch('/api/products');
+                    const products = await response.json();
+                    console.log('Productos recibidos:', products.length);
+                    
+                    if (grid) {
+                        grid.innerHTML = products.map(p => `
+                            <article class="card product">
+                                <img src="${p.image||''}" alt="${p.name}">
+                                <h3>${p.name}</h3>
+                                <p>${p.description||''}</p>
+                                <div class="price">$${p.price}</div>
+                                <button onclick="alert('Añadido: ${p.name}')">Añadir</button>
+                            </article>
+                        `).join('');
+                        debugContent.innerHTML += `<p>✅ ${products.length} productos cargados</p>`;
+                    }
+                } catch (error) {
+                    console.error('Error cargando productos:', error);
+                    debugContent.innerHTML += `<p>❌ Error cargando productos: ${error.message}</p>`;
+                }
+            }
+            
+            loadProducts();
+            
+            // Event listeners básicos
+            document.getElementById('accountIcon')?.addEventListener('click', () => {
+                alert('Modal de cuenta funcionando');
+            });
+            
+            document.getElementById('themeToggle')?.addEventListener('click', () => {
+                alert('Toggle de tema funcionando');
+            });
+            
+            document.getElementById('ecoToggle')?.addEventListener('click', () => {
+                alert('Toggle eco funcionando');
+            });
+            
+            debugContent.innerHTML += '<p>✅ Event listeners configurados</p>';
+        });
+    </script>
+</body>
+</html>

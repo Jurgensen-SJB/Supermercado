@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panel de Administración - EcoMarket</title>
+  <link rel="icon" type="image/png" href="/assets/img/carritologo.png">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header class="header-app">
+    <div class="container">
+      <div class="header-row">
+        <div class="logo">
+          <div class="logo-icon">
+            <img src="/assets/img/carritologo.png" alt="SuperMercado Logo" class="logo-img">
+          </div>
+          <div class="logo-text">
+            <div class="title">EcoMarket</div>
+            <div class="subtitle">Delivery Express</div>
+          </div>
+        </div>
+        <div class="search">
+          <div class="search-icon">🔍</div>
+          <input type="text" id="search" placeholder="Buscar productos..." autocomplete="off">
+        </div>
+        <nav class="icons">
+          <a class="icon" href="/" title="Inicio">🏠</a>
+          <a class="icon" id="themeToggle" title="Modo Nocturno">🌙</a>
+          <a class="icon" id="ecoToggle" title="Modo Ecológico">🌱</a>
+          <a class="icon" href="/views/profile.html" title="Perfil">👤</a>
+          <button class="btn" id="logoutBtn">Cerrar sesión</button>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="admin-hero">
+      <h1>Panel de Administración</h1>
+      <p>Gestiona productos, inventario y configuración del supermercado</p>
+    </section>
+
+    <!-- Buscador de productos -->
+    <section class="admin-card">
+      <div class="card-header">
+        <h2>Buscar Productos</h2>
+        <div class="card-icon">🔍</div>
+      </div>
+      <div class="admin-search">
+        <div class="search-row">
+          <input type="text" id="adminSearch" placeholder="Buscar por nombre o descripción...">
+          <select id="adminCategoryFilter">
+            <option value="">Todas las categorías</option>
+            <option value="descuentos">🏷️ Descuentos</option>
+            <option value="Frutas">🍎 Frutas</option>
+            <option value="Lácteos">🥛 Lácteos</option>
+            <option value="Panadería">🍞 Panadería</option>
+            <option value="Huevos">🥚 Huevos</option>
+            <option value="Bebidas">🥤 Bebidas</option>
+            <option value="Aseo">🧴 Aseo</option>
+            <option value="Limpieza">🧽 Limpieza</option>
+            <option value="Juegos">🎮 Juegos</option>
+            <option value="Carnes">🥩 Carnes</option>
+            <option value="Granos">🌾 Granos</option>
+            <option value="Pastas">🍝 Pastas</option>
+            <option value="Verduras">🥬 Verduras</option>
+            <option value="Medicamentos">💊 Medicamentos</option>
+          </select>
+          <button class="btn primary" id="adminSearchBtn">Buscar</button>
+          <button class="btn" id="adminClearBtn">Limpiar</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="admin-grid">
+      <!-- Gestión de Categorías -->
+      <section class="admin-card">
+        <div class="card-header">
+          <h2>Gestionar Categorías</h2>
+          <div class="card-icon">🏷️</div>
+        </div>
+        <div class="admin-form">
+          <div class="form-group">
+            <label for="categoryName">Nombre de la Categoría</label>
+            <input id="categoryName" type="text" placeholder="Ej: Verduras">
+          </div>
+          <div class="form-group">
+            <label for="categoryDescription">Descripción</label>
+            <input id="categoryDescription" type="text" placeholder="Descripción opcional">
+          </div>
+          <div class="form-row">
+            <button class="btn primary" id="addCategory">
+              <span class="btn-icon">➕</span>
+              Añadir Categoría
+            </button>
+            <button class="btn" id="resetCategory">
+              <span class="btn-icon">🔄</span>
+              Limpiar Formulario
+            </button>
+          </div>
+        </div>
+        <div class="categories-list">
+          <div class="table-header">
+            <span>Categoría</span>
+            <span>Descripción</span>
+            <span>Acciones</span>
+          </div>
+          <div id="categoriesList" class="table-body">
+            <!-- Las categorías se cargarán aquí -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Crear/Editar Producto -->
+      <section class="admin-card">
+        <div class="card-header">
+          <h2>Crear / Editar Producto</h2>
+          <div class="card-icon">📦</div>
+        </div>
+        <form id="productForm" class="admin-form" method="POST" action="#">
+          <input type="hidden" id="productId">
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name">Nombre del Producto</label>
+              <input id="name" name="name" required placeholder="Ej: Manzanas Gala">
+            </div>
+            <div class="form-group">
+              <label for="category">Categoría</label>
+              <select id="category" name="category" required>
+                <option value="">Seleccionar categoría</option>
+                <option value="Frutas">🍎 Frutas</option>
+                <option value="Lácteos">🥛 Lácteos</option>
+                <option value="Panadería">🍞 Panadería</option>
+                <option value="Huevos">🥚 Huevos</option>
+                <option value="Bebidas">🥤 Bebidas</option>
+                <option value="Aseo">🧴 Aseo</option>
+                <option value="Limpieza">🧽 Limpieza</option>
+                <option value="Juegos">🎮 Juegos</option>
+                <option value="Carnes">🥩 Carnes</option>
+                <option value="Granos">🌾 Granos</option>
+                <option value="Pastas">🍝 Pastas</option>
+                <option value="Verduras">🥬 Verduras</option>
+                <option value="Medicamentos">💊 Medicamentos</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="description">Descripción</label>
+            <textarea id="description" name="description" rows="3" placeholder="Describe las características del producto"></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="price">Precio ($)</label>
+              <input id="price" name="price" type="number" min="0" step="0.01" required placeholder="0.00">
+            </div>
+            <div class="form-group">
+              <label for="discount">Descuento (%)</label>
+              <input id="discount" name="discount" type="number" min="0" max="100" step="0.01" placeholder="0.00">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="stock">Stock</label>
+              <input id="stock" name="stock" type="number" min="0" step="1" required placeholder="0">
+            </div>
+            <div class="form-group">
+              <label for="isEco">Producto Ecológico</label>
+              <select id="isEco" name="isEco">
+                <option value="0">No</option>
+                <option value="1">Sí</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="image">URL de Imagen</label>
+            <input id="image" name="image" type="url" placeholder="https://ejemplo.com/imagen.jpg">
+          </div>
+
+          <div class="form-group checkbox-group">
+            <label class="checkbox-label">
+              <input id="isEcoCheckbox" name="isEco" type="checkbox">
+              <span class="checkmark"></span>
+              Producto Ecológico 🌿
+            </label>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn primary" type="submit">
+              <span class="btn-icon">💾</span>
+              Guardar Producto
+            </button>
+            <button class="btn secondary" type="button" id="resetBtn">
+              <span class="btn-icon">🔄</span>
+              Limpiar Formulario
+            </button>
+          </div>
+        </form>
+      </section>
+    </div>
+
+    <!-- Inventario de Productos - Fuera del grid para tener todo el ancho -->
+    <section class="admin-card full-width">
+      <div class="card-header">
+        <h2>Inventario de Productos</h2>
+        <div class="card-icon">📋</div>
+      </div>
+        <!-- Resumen de Stock -->
+        <div class="stock-summary">
+          <div class="summary-card stock-empty-summary">
+            <div class="summary-icon">🚫</div>
+            <div class="summary-content">
+              <div class="summary-number" id="emptyStock">0</div>
+              <div class="summary-label">Sin Stock</div>
+            </div>
+          </div>
+          <div class="summary-card stock-low-summary">
+            <div class="summary-icon">⚠️</div>
+            <div class="summary-content">
+              <div class="summary-number" id="lowStock">0</div>
+              <div class="summary-label">Stock Bajo (≤5)</div>
+            </div>
+          </div>
+          <div class="summary-card stock-medium-summary">
+            <div class="summary-icon">📊</div>
+            <div class="summary-content">
+              <div class="summary-number" id="mediumStock">0</div>
+              <div class="summary-label">Stock Medio (6-15)</div>
+            </div>
+          </div>
+          <div class="summary-card stock-high-summary">
+            <div class="summary-icon">✅</div>
+            <div class="summary-content">
+              <div class="summary-number" id="highStock">0</div>
+              <div class="summary-label">Stock Alto (>15)</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="products-table">
+          <div class="table-header">
+            <span>Imagen</span>
+            <span>Producto</span>
+            <span>Precio</span>
+            <span>Stock</span>
+            <span>Categoría</span>
+            <span>Eco</span>
+            <span>Acciones</span>
+          </div>
+          <div id="adminList" class="table-body"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="container footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <img src="/assets/img/carritologo.png" alt="EcoMarket Logo" class="footer-logo-img">
+          <span class="footer-title">EcoMarket</span>
+        </div>
+        <p class="footer-tagline">🍃 Tu supermercado ecológico de confianza 🌱</p>
+      </div>
+      <div class="footer-info">
+        <p class="footer-copyright">© 2025 EcoMarket · Delivery Express</p>
+        <p class="footer-mission">Comprometidos con el medio ambiente y tu bienestar</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/app.js"></script>
+  <script>
+    // Script específico para la página de administración
+    document.addEventListener('DOMContentLoaded', function() {
+      // Inicializar temas
+      initializeAdminThemes();
+      
+      // Inicializar funcionalidades del admin
+      initializeAdminFeatures();
+    });
+    
+    // Función para inicializar temas en el admin
+    function initializeAdminThemes() {
+      // Aplicar tema guardado
+      const savedTheme = localStorage.getItem('super_theme_v1') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      
+      const savedEco = localStorage.getItem('super_eco_v1') === 'true';
+      document.documentElement.setAttribute('data-eco', savedEco);
+      
+      // Event listeners para toggles
+      document.getElementById('themeToggle')?.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('super_theme_v1', newTheme);
+      });
+      
+      document.getElementById('ecoToggle')?.addEventListener('click', () => {
+        const currentEco = document.documentElement.getAttribute('data-eco') === 'true';
+        const newEco = !currentEco;
+        document.documentElement.setAttribute('data-eco', newEco);
+        localStorage.setItem('super_eco_v1', newEco);
+        updateEcoIconState();
+      });
+      
+      // Inicializar estado del icono eco
+      updateEcoIconState();
+    }
+    
+    // Función para actualizar el estado visual del icono eco
+    function updateEcoIconState() {
+      const ecoIcon = document.getElementById('ecoToggle');
+      if (!ecoIcon) return;
+      
+      const isEcoMode = localStorage.getItem('super_eco_v1') === 'true';
+      
+      if (isEcoMode) {
+        ecoIcon.classList.add('eco-active');
+      } else {
+        ecoIcon.classList.remove('eco-active');
+      }
+    }
+    
+    // Función para inicializar funcionalidades específicas del admin
+    function initializeAdminFeatures() {
+      // Event listener para logout
+      document.getElementById('logoutBtn')?.addEventListener('click', () => {
+        if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+          localStorage.removeItem('super_auth_v1');
+          localStorage.removeItem('currentUserId');
+          alert('Sesión cerrada correctamente');
+          window.location.href = '/';
+        }
+      });
+      
+      // Cargar datos iniciales
+      loadAdminData();
+    }
+    
+    // Función para cargar datos del panel de administración
+    async function loadAdminData() {
+      try {
+        // Cargar categorías
+        await loadCategories();
+        
+        // Cargar productos
+        await loadAdminProducts();
+        
+        console.log('Datos del admin cargados correctamente');
+      } catch (error) {
+        console.error('Error cargando datos del admin:', error);
+      }
+    }
+  </script>
+</body>
+</html>
+
+
